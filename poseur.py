@@ -26,8 +26,20 @@ class Slideshow(pyglet.window.Window):
 		self.set_visible()
 		self.x = 320
 		self.y = 240
-		self.rot = 0.4
+		self.rot = 0.0
 		self.size = 300.0
+
+		pyglet.clock.schedule(self.update)
+		self.elapsed = 0.0
+
+	def update(self, dt):
+		self.rot += 0.15
+		self.elapsed += dt
+
+		if self.elapsed > 3.0:
+			# display fps every 3 secs
+			self.elapsed -= 3.0
+			print "FPS is %f" % pyglet.clock.get_fps()
 
 	def on_draw(self):
 		self.clear()
@@ -48,7 +60,6 @@ class Slideshow(pyglet.window.Window):
 		glEnd()
 
 		glPopMatrix()
-		self.rot = self.rot + 1.1
 		self.label.draw()
 
 if __name__ == "__main__":
