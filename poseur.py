@@ -37,7 +37,8 @@ class Test(QtGui.QMainWindow):
 		w = Wiggy(self)
 		self.setCentralWidget(w)
 
-a = QtGui.QApplication(sys.argv)
-w = Test()
-w.show()
-a.exec_()
+if __name__ == "__main__":
+	a = QtGui.QApplication(sys.argv)
+	w = Test()
+	w.show()
+	a.exec_()
