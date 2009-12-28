@@ -31,10 +31,10 @@ class Slideshow(pyglet.window.Window):
 			fullscreen=fullscreen)
 
 		self.label = pyglet.text.Label('Hello!',
-			font_name='Arial',
-			font_size=72,
-			x=self.width//2,
-			y=self.height//2,
+			font_name='Helvetica',
+			font_size=97,
+			x=0, #self.width//2,
+			y=0, #self.height//2,
 			anchor_x='center',
 			anchor_y='center')
 
@@ -53,9 +53,11 @@ class Slideshow(pyglet.window.Window):
 	def update(self, dt):
 		"Called once for each frame, advances animation, etc."
 		self.rot += 0.15
+		if self.rot >= 360:
+			self.rot -= 360
 		self.elapsed += dt
 
-		if self.elapsed > 3.0:
+		if self.elapsed >= 3.0:
 			# display fps every 3 secs
 			self.elapsed -= 3.0
 			print "FPS is %f" % pyglet.clock.get_fps()
@@ -80,6 +82,10 @@ class Slideshow(pyglet.window.Window):
 		glEnd()
 
 		glPopMatrix()
+
+		glLoadIdentity()
+		glTranslatef(self.x, self.y, 0.0)
+		glRotatef(-self.rot, 0, 0, 1)
 		self.label.draw()
 
 # don't run anything if we're invoked as "import poseur":
