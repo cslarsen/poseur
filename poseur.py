@@ -10,6 +10,7 @@ http://github.com/cslarsen/poseur
 """
 
 import sys
+import math
 
 version = '0.0.1'
 
@@ -85,10 +86,11 @@ class Slideshow(pyglet.window.Window):
 
 		glLoadIdentity()
 		glTranslatef(self.x, self.y, 0.0)
+		glScalef(2.0+math.cos(math.pi*2*self.rot/360.0), 2.0+math.cos(math.pi*2*self.rot/360.0), 1.0)
 		glRotatef(-self.rot, 0, 0, 1)
 		self.label.draw()
 
 # don't run anything if we're invoked as "import poseur":
 if __name__ == "__main__":
-	window = Slideshow()
+	window = Slideshow(fullscreen=False)
 	pyglet.app.run()
