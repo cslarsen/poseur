@@ -1,20 +1,38 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pyglet
-from pyglet.gl import *
+"""Poseur is a simple presentation viewer.
+
+Copyright (C) 2010 Christian Stigen Larsen
+Distributed under the (modified) BSD license.
+
+http://github.com/cslarsen/poseur
+"""
+
+import sys
+
+version = '0.0.1'
+
+try:
+	import pyglet
+	from pyglet.gl import *
+except ImportError, e:
+	print e
+	sys.exit(1)
 
 class Slideshow(pyglet.window.Window):
-	def __init__(self):
+	"Controls the main window and its message loop."
+
+	def __init__(self, visible=False, vsync=True, fullscreen=False):
 		pyglet.window.Window.__init__(self,
 			caption='Poseur',
-			visible=False,
-			vsync=True,
-			fullscreen=False)
+			visible=visible,
+			vsync=vsync,
+			fullscreen=fullscreen)
 
 		self.label = pyglet.text.Label('Hello!',
-			font_name='Times New Roman',
-			font_size=36,
+			font_name='Arial',
+			font_size=72,
 			x=self.width//2,
 			y=self.height//2,
 			anchor_x='center',
@@ -33,6 +51,7 @@ class Slideshow(pyglet.window.Window):
 		self.elapsed = 0.0
 
 	def update(self, dt):
+		"Called once for each frame, advances animation, etc."
 		self.rot += 0.15
 		self.elapsed += dt
 
@@ -42,6 +61,7 @@ class Slideshow(pyglet.window.Window):
 			print "FPS is %f" % pyglet.clock.get_fps()
 
 	def on_draw(self):
+		"Called when screen must be redrawed"
 		self.clear()
 		glPushMatrix()
 
@@ -62,6 +82,7 @@ class Slideshow(pyglet.window.Window):
 		glPopMatrix()
 		self.label.draw()
 
+# don't run anything if we're invoked as "import poseur":
 if __name__ == "__main__":
 	window = Slideshow()
 	pyglet.app.run()
