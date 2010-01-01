@@ -117,11 +117,11 @@ def parse_opts(argv):
       if o in ("-h", "--help"):
         usage()
         sys.exit()
-      elif o in ("f", "--fullscreen"):
+      elif o in ("-f", "--fullscreen"):
         options['fullscreen'] = True
-      elif o in ("v", "--verbose"):
+      elif o in ("-v", "--verbose"):
         options['verbose'] = True
-      elif o in ("V", "--version"):
+      elif o in ("-V", "--version"):
         print version
         print copyright
         sys.exit()
