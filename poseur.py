@@ -33,13 +33,13 @@ except ImportError, e:
 class Slideshow(pyglet.window.Window):
   "Controls the main window and its message loop."
 
-  def __init__(self, visible=False, vsync=True, fullscreen=False):
+  def __init__(self, fullscreen, width, height, visible=False, vsync=True):
     pyglet.window.Window.__init__(self,
       caption='Poseur',
       visible=visible,
       vsync=vsync,
-      width=options['width'],
-      height=options['height'],
+      width=width,
+      height=height,
       fullscreen=fullscreen)
 
     self.label = pyglet.text.Label('Hello!',
@@ -108,23 +108,29 @@ def usage():
   print "  -f  --fullscreen  View slideshow in fullscreen"
   print "  -v  --verbose     Print extra information to console"
   print "  -V  --version     Print version and exit"
+  print "  -H  --height      Set screen height"
+  print "  -W  --width       Set screen width"
 
 def parse_opts(argv):
   try:
-    opts, args = getopt.getopt(argv[1:], "hfvV",
-      ["help", "fullscreen", "verbose", "version"])
+    opts, args = getopt.getopt(argv[1:], "hfvVW:H:",
+      ["help", "fullscreen", "verbose", "version", "height=", "width="])
     for o, a in opts:
       if o in ("-h", "--help"):
         usage()
-        sys.exit()
+        sys.exit(0)
       elif o in ("-f", "--fullscreen"):
         options['fullscreen'] = True
       elif o in ("-v", "--verbose"):
         options['verbose'] = True
+      elif o in ("-W", "--width"):
+        options['width'] = int(a)
+      elif o in ("-H", "--height"):
+        options['height'] = int(a)
       elif o in ("-V", "--version"):
         print version
         print copyright
-        sys.exit()
+        sys.exit(0)
 
   except getopt.GetoptError, e:
     print "Error:", e
@@ -135,5 +141,8 @@ def parse_opts(argv):
 # don't run anything if we're invoked as "import poseur":
 if __name__ == "__main__":
   parse_opts(sys.argv)
-  window = Slideshow(fullscreen=options['fullscreen'])
+  window = Slideshow(
+    fullscreen = options['fullscreen'],
+    width      = options['width'],
+    height     = options['height'])
   pyglet.app.run()
