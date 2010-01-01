@@ -24,6 +24,8 @@ slides = [
   '- Free and open source',
 ]
 
+endSlide = '(End of slideshow)'
+
 options = {
   'fullscreen': False,
   'verbose':    False,
@@ -67,6 +69,9 @@ class Slideshow(pyglet.window.Window):
 
     self.set_visible()
 
+    # at startup, insert the END OF SLIDESHOW slide
+    slides.append(endSlide)
+
     pyglet.clock.schedule(self.update)
     self.elapsed = 0.0
 
@@ -83,18 +88,32 @@ class Slideshow(pyglet.window.Window):
       print "FPS is %f" % pyglet.clock.get_fps()
 
   def on_next_slide_step(self):
-    "Called to increment slide step (mouseclick, space, etc)"
+    "Go forward one step in slideshow"
     if self.curslide+1 == len(slides):
       self.on_slideshow_end()
     else:
       self.curslide += 1
 
+  def on_prev_slide_step(self):
+    "Go backwards one step in slideshow"
+    if self.curslide > 0:
+      self.curslide -= 1
+
   def on_slideshow_end(self):
     "Called when reached end of slide show"
-    sys.exit(0)
+    pass
 
   def on_mouse_release(self, x, y, button, modifiers):
     self.on_next_slide_step()
+
+  def on_key_release(self, symbol, modifiers):
+    if symbol in (pyglet.window.key.RIGHT,
+                  pyglet.window.key.SPACE,
+                  pyglet.window.key.ENTER):
+      self.on_next_slide_step()
+    elif symbol in (pyglet.window.key.LEFT,
+                    pyglet.window.key.BACKSPACE):
+      self.on_prev_slide_step()
 
   def on_draw(self):
     "Draw current slide"
