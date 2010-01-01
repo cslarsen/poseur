@@ -42,9 +42,14 @@ class Slideshow(pyglet.window.Window):
       height=height,
       fullscreen=fullscreen)
 
+    self.x = options['width']
+    self.y = options['height']
+    self.rot = 0.0
+    self.size = max(self.x, self.y)
+
     self.label = pyglet.text.Label('Hello!',
       font_name='Helvetica',
-      font_size=97,
+      font_size=self.size / 16.0,
       x=0, #self.width//2,
       y=0, #self.height//2,
       anchor_x='center',
@@ -54,10 +59,6 @@ class Slideshow(pyglet.window.Window):
     # to avoid annoying white-out before going black
 
     self.set_visible()
-    self.x = options['width']
-    self.y = options['height']
-    self.rot = 0.0
-    self.size = 300.0
 
     pyglet.clock.schedule(self.update)
     self.elapsed = 0.0
