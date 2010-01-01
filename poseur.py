@@ -13,8 +13,9 @@ import sys
 import getopt
 import math
 
-version = '0.0.1'
+version   = '0.0.1'
 copyright = 'Copyright (C) 2010 Christian Stigen Larsen'
+license   = 'Distributed under the (modified) BSD license'
 
 options = {
   'fullscreen': False,
@@ -50,8 +51,8 @@ class Slideshow(pyglet.window.Window):
     self.label = pyglet.text.Label('Hello!',
       font_name='Helvetica',
       font_size=self.size / 16.0,
-      x=0, #self.width//2,
-      y=0, #self.height//2,
+      x=0,
+      y=0,
       anchor_x='center',
       anchor_y='center')
 
@@ -114,8 +115,11 @@ def usage():
 
 def parse_opts(argv):
   try:
-    opts, args = getopt.getopt(argv[1:], "hfvVW:H:",
+    opts, args = getopt.getopt(
+      argv[1:],
+      "hfvVW:H:",
       ["help", "fullscreen", "verbose", "version", "height=", "width="])
+
     for o, a in opts:
       if o in ("-h", "--help"):
         usage()
@@ -131,6 +135,7 @@ def parse_opts(argv):
       elif o in ("-V", "--version"):
         print version
         print copyright
+        print license
         sys.exit(0)
 
   except getopt.GetoptError, e:
