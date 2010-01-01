@@ -17,6 +17,13 @@ version   = '0.0.1'
 copyright = 'Copyright (C) 2010 Christian Stigen Larsen'
 license   = 'Distributed under the (modified) BSD license'
 
+slides = [
+  'What is Poseur?',
+  '- A simple presentation software',
+  '- Written in Python',
+  '- Free and open source',
+]
+
 options = {
   'fullscreen': False,
   'verbose':    False,
@@ -35,18 +42,23 @@ class Slideshow(pyglet.window.Window):
   "Controls the main window and its message loop."
 
   def __init__(self, fullscreen, width, height, visible=False, vsync=True):
-    pyglet.window.Window.__init__(self,
-      caption='Poseur',
-      visible=visible,
-      vsync=vsync,
-      width=width,
-      height=height,
-      fullscreen=fullscreen)
+    opts = {
+      'visible': visible,
+      'caption': 'Poseur',
+      'fullscreen': fullscreen,
+      'vsync': vsync,
+    }
 
-    self.x = options['width']
-    self.y = options['height']
+    if not fullscreen:
+      opts['width'] = width
+      opts['height'] = height
+
+    pyglet.window.Window.__init__(self, **opts)
+
     self.rot = 0.0
-    self.size = max(self.x, self.y)
+    self.size = max(*self.get_size())
+    self.x = self.get_size()[0]
+    self.y = self.get_size()[1]
 
     self.label = pyglet.text.Label('Hello!',
       font_name='Helvetica',
