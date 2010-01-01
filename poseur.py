@@ -80,7 +80,7 @@ class Slideshow(pyglet.window.Window):
     glPushMatrix()
 
     glLoadIdentity()
-    glTranslatef(self.x, self.y, 0.0)
+    glTranslatef(self.x/2, self.y/2, 0.0)
     glRotatef(self.rot, 0, 0, 1)
     glScalef(self.size, self.size, 1.0)
 
@@ -96,7 +96,7 @@ class Slideshow(pyglet.window.Window):
     glPopMatrix()
 
     glLoadIdentity()
-    glTranslatef(self.x, self.y, 0.0)
+    glTranslatef(self.x/2, self.y/2, 0.0)
     glScalef(2.0+math.cos(math.pi*2*self.rot/360.0), 2.0+math.cos(math.pi*2*self.rot/360.0), 1.0)
     glRotatef(-self.rot, 0, 0, 1)
     self.label.draw()
