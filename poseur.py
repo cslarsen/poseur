@@ -17,6 +17,10 @@ version   = '0.0.1'
 copyright = 'Copyright (C) 2010 Christian Stigen Larsen'
 license   = 'Distributed under the (modified) BSD license'
 
+# browser keys on my particular computer, it this (semi) portable?
+USER_KEY_BACK = 712964571136
+USER_KEY_FORWARD = 717259538432
+
 slides = [
   'What is Poseur?',
   '- A simple presentation software',
@@ -109,10 +113,13 @@ class Slideshow(pyglet.window.Window):
   def on_key_release(self, symbol, modifiers):
     if symbol in (pyglet.window.key.RIGHT,
                   pyglet.window.key.SPACE,
-                  pyglet.window.key.ENTER):
+                  pyglet.window.key.ENTER,
+                  USER_KEY_FORWARD):
       self.on_next_slide_step()
+
     elif symbol in (pyglet.window.key.LEFT,
-                    pyglet.window.key.BACKSPACE):
+                    pyglet.window.key.BACKSPACE,
+                    USER_KEY_BACK):
       self.on_prev_slide_step()
 
   def on_draw(self):
