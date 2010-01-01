@@ -102,7 +102,8 @@ class Slideshow(pyglet.window.Window):
 
     text = pyglet.text.Label(slides[self.curslide],
       font_name='Helvetica',
-      font_size=fontSize)
+      font_size=fontSize,
+      color=(255,255,255,255))
 
     textHeight = fontSize
 
