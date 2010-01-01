@@ -60,13 +60,7 @@ class Slideshow(pyglet.window.Window):
     self.x = self.get_size()[0]
     self.y = self.get_size()[1]
 
-    self.label = pyglet.text.Label('Hello!',
-      font_name='Helvetica',
-      font_size=self.size / 16.0,
-      x=0,
-      y=0,
-      anchor_x='center',
-      anchor_y='center')
+    self.curslide = 0
 
     # allow time to init window before displaying,
     # to avoid annoying white-out before going black
@@ -88,32 +82,37 @@ class Slideshow(pyglet.window.Window):
       self.elapsed -= 3.0
       print "FPS is %f" % pyglet.clock.get_fps()
 
+  def on_next_slide_step(self):
+    "Called to increment slide step (mouseclick, space, etc)"
+    if self.curslide+1 == len(slides):
+      self.on_slideshow_end()
+    else:
+      self.curslide += 1
+
+  def on_slideshow_end(self):
+    "Called when reached end of slide show"
+    sys.exit(0)
+
+  def on_mouse_release(self, x, y, button, modifiers):
+    self.on_next_slide_step()
+
   def on_draw(self):
-    "Called when screen must be redrawed"
+    "Draw current slide"
+    fontSize = self.size / 32.0
+
+    text = pyglet.text.Label(slides[self.curslide],
+      font_name='Helvetica',
+      font_size=fontSize)
+
+    textHeight = fontSize
+
     self.clear()
     glPushMatrix()
-
     glLoadIdentity()
-    glTranslatef(self.x/2, self.y/2, 0.0)
-    glRotatef(self.rot, 0, 0, 1)
-    glScalef(self.size, self.size, 1.0)
-
-    glBegin(GL_TRIANGLES)
-    glColor4f(1.0, 0.0, 0.0, 0.0)
-    glVertex2f(0.0, 0.5)
-    glColor4f(0.0, 0.0, 1.0, 1.0)
-    glVertex2f(0.2, -0.5)
-    glColor4f(0.0, 0.0, 1.0, 1.0)
-    glVertex2f(-0.2, -0.5)
-    glEnd()
-
+    glTranslatef(0.0, self.y - textHeight, 0.0)
+    text.draw()
     glPopMatrix()
 
-    glLoadIdentity()
-    glTranslatef(self.x/2, self.y/2, 0.0)
-    glScalef(2.0+math.cos(math.pi*2*self.rot/360.0), 2.0+math.cos(math.pi*2*self.rot/360.0), 1.0)
-    glRotatef(-self.rot, 0, 0, 1)
-    self.label.draw()
 
 def usage():
   print "Usage: poseur [ option(s) ]"
