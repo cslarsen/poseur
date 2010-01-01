@@ -19,6 +19,8 @@ copyright = 'Copyright (C) 2010 Christian Stigen Larsen'
 options = {
   'fullscreen': False,
   'verbose':    False,
+  'width': 1024,
+  'height': 768,
 }
 
 try:
@@ -36,6 +38,8 @@ class Slideshow(pyglet.window.Window):
       caption='Poseur',
       visible=visible,
       vsync=vsync,
+      width=options['width'],
+      height=options['height'],
       fullscreen=fullscreen)
 
     self.label = pyglet.text.Label('Hello!',
@@ -50,8 +54,8 @@ class Slideshow(pyglet.window.Window):
     # to avoid annoying white-out before going black
 
     self.set_visible()
-    self.x = 320
-    self.y = 240
+    self.x = options['width']
+    self.y = options['height']
     self.rot = 0.0
     self.size = 300.0
 
