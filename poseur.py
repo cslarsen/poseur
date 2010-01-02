@@ -78,8 +78,23 @@ def parseOptions(argv):
   (option, files) = p.parse_args()
 
   if option.DEBUG:
-    print "Options:", option
-    print "Arguments:", files
+    print "Poseur options:", option
+    print "Program argumentseurArguments:", files
+    print ""
+    print "Pyglet options:", pyglet.options
+    print ""
+
+  if option.VERSION:
+    print "poseur", version
+    print copyright
+    print license
+    print ""
+    print "Using pyglet version", pyglet.version
+    print ""
+    print "OpenGL version:", pyglet.gl.gl_info.get_version()
+    print "OpenGL vendor:", pyglet.gl.gl_info.get_vendor()
+    print "OpenGL renderer:", pyglet.gl.gl_info.get_renderer()
+    sys.exit(0)
 
   return files
 
