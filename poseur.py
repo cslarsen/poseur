@@ -113,9 +113,8 @@ class Slideshow(pyglet.window.Window):
 
     pyglet.window.Window.__init__(self, **pygOpts)
 
-    self.size = max(*self.get_size())
-    self.x = self.get_size()[0]
-    self.y = self.get_size()[1]
+    self.x, self.y = self.get_size()
+    self.size = math.sqrt(self.x ** 2 + self.y ** 2)
     debug("Screen dimensions: %dx%d pixels" % (self.x, self.y))
 
     self.curslide = 0
