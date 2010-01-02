@@ -90,6 +90,7 @@ class Slideshow(pyglet.window.Window):
 
     pyglet.clock.schedule(self.update)
     self.elapsed = 0.0
+    self.elapsedHideMouse = 0.0
 
   def update(self, dt):
     "Called once for each frame, advances animation, etc."
@@ -97,10 +98,19 @@ class Slideshow(pyglet.window.Window):
     if self.rot >= 360:
       self.rot -= 360
     self.elapsed += dt
+    self.elapsedHideMouse += dt
 
-    if options['verbose'] and self.elapsed >= 3.0:
+    if self.elapsed >= 3.0:
       self.elapsed -= 3.0
-      verbose("FPS is %f" % pyglet.clock.get_fps())
+      # print frames per second
+      if options['verbose']:
+        verbose("FPS is %f" % pyglet.clock.get_fps())
+
+    # hide mouse after a while
+    if self.elapsedHideMouse >= 3.0:
+      self.elapsedHideMouse -= 3.0
+      #if options['fullscreen']: # always hide
+      self.set_exclusive_mouse(True)
 
   def on_next_slide_step(self):
     "Go forward one step in slideshow"
@@ -117,6 +127,11 @@ class Slideshow(pyglet.window.Window):
   def on_slideshow_end(self):
     "Called when reached end of slide show"
     pass
+
+  def on_mouse_motion(self, x, y, dx, dy):
+    # show mouse again
+    self.set_exclusive_mouse(False)
+    self.elapsedHideMouse = 0.0
 
   def on_mouse_release(self, x, y, button, modifiers):
     debug("Mouse button released: x=%d y=%d button=%s modifiers=%s" % (
