@@ -113,7 +113,6 @@ class Slideshow(pyglet.window.Window):
 
     pyglet.window.Window.__init__(self, **pygOpts)
 
-    self.rot = 0.0
     self.size = max(*self.get_size())
     self.x = self.get_size()[0]
     self.y = self.get_size()[1]
@@ -135,9 +134,6 @@ class Slideshow(pyglet.window.Window):
 
   def update(self, dt):
     "Called once for each frame, advances animation, etc."
-    self.rot += 0.15
-    if self.rot >= 360:
-      self.rot -= 360
     self.elapsed += dt
     self.elapsedHideMouse += dt
 
