@@ -97,24 +97,27 @@ class Slideshow(pyglet.window.Window):
   "Controls the main window and its message loop."
 
   def __init__(self, fullscreen, width, height, visible=False, vsync=True):
-    opts = {
-      'visible': visible,
-      'caption': 'Poseur',
+
+    pygOpts = {
+      'visible':    visible,
+      'caption':    'Poseur',
       'fullscreen': fullscreen,
-      'vsync': vsync,
+      'vsync':      vsync,
     }
 
+    # Pyglet only accepts dimensions in
+    # windowed mode
     if not fullscreen:
-      opts['width'] = width
-      opts['height'] = height
+      pygOpts['width']  = width
+      pygOpts['height'] = height
 
-    pyglet.window.Window.__init__(self, **opts)
+    pyglet.window.Window.__init__(self, **pygOpts)
 
     self.rot = 0.0
     self.size = max(*self.get_size())
     self.x = self.get_size()[0]
     self.y = self.get_size()[1]
-    debug("Screen dimensions are %dx%d pixels" % (self.x, self.y))
+    debug("Screen dimensions: %dx%d pixels" % (self.x, self.y))
 
     self.curslide = 0
 
