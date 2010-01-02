@@ -109,8 +109,8 @@ class Slideshow(pyglet.window.Window):
     # hide mouse after a while
     if self.elapsedHideMouse >= 3.0:
       self.elapsedHideMouse -= 3.0
-      #if options['fullscreen']: # always hide
-      self.set_exclusive_mouse(True)
+      if options['fullscreen']:
+        self.set_exclusive_mouse(True)
 
   def on_next_slide_step(self):
     "Go forward one step in slideshow"
