@@ -33,8 +33,9 @@ endSlide = '(End of slideshow)'
 options = {
   'fullscreen': False,
   'verbose':    False,
-  'width': 1024,
-  'height': 768,
+  'debug':      False,
+  'width':       1024,
+  'height':       768,
 }
 
 try:
@@ -43,6 +44,14 @@ try:
 except ImportError, e:
   print e
   sys.exit(1)
+
+def verbose(s):
+  "Print message if verbose option is set"
+  if options['verbose']: print s
+
+def debug(s):
+  "Print message if debug option is set"
+  if options['debug']: print s
 
 class Slideshow(pyglet.window.Window):
   "Controls the main window and its message loop."
@@ -87,9 +96,8 @@ class Slideshow(pyglet.window.Window):
     self.elapsed += dt
 
     if options['verbose'] and self.elapsed >= 3.0:
-      # display fps every 3 secs
       self.elapsed -= 3.0
-      print "FPS is %f" % pyglet.clock.get_fps()
+      verbose("FPS is %f" % pyglet.clock.get_fps())
 
   def on_next_slide_step(self):
     "Go forward one step in slideshow"
@@ -108,9 +116,16 @@ class Slideshow(pyglet.window.Window):
     pass
 
   def on_mouse_release(self, x, y, button, modifiers):
+    debug("Mouse button released: x=%d y=%d button=%s modifiers=%s" % (
+      x, y, button, modifiers))
+
     self.on_next_slide_step()
 
   def on_key_release(self, symbol, modifiers):
+    debug("Key released: %s (%d)" % (
+      pyglet.window.key.symbol_string(symbol),
+      symbol))
+
     if symbol in (pyglet.window.key.RIGHT,
                   pyglet.window.key.SPACE,
                   pyglet.window.key.ENTER,
@@ -129,22 +144,55 @@ class Slideshow(pyglet.window.Window):
     text = pyglet.text.Label(slides[self.curslide],
       font_name='Helvetica',
       font_size=fontSize,
-      color=(255,255,255,255))
+      color=(155,45,255,255))
 
     textHeight = fontSize
 
     self.clear()
-    glPushMatrix()
+    #glPushMatrix()
+
+    #glMatrixMode(GL_PROJECTION);
+    #glLoadIdentity();
+
+    #glMatrixMode(GL_MODELVIEW);
+    #glLoadIdentity();
+
+    #glBegin(GL_QUADS);
+    #/red color
+    #glColor3f(1.0,0.0,0.0);
+    #glVertex2f(-1.0, 1.0);
+    #glVertex2f(-1.0,-1.0);
+    #/blue color
+    #glColor3f(0.0,0.0,1.0);
+    #glVertex2f(1.0,-1.0);
+    #glVertex2f(1.0, 1.0);
+    #glEnd();
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity()
+    glBegin(GL_QUADS)
+    glColor3f(0.6,0.6,0.6) # gray
+    glVertex2f(-1.0, 1.0);
+    glVertex2f(1.0, 1.0);
+    glColor3f(1.0,1.0,1.0) # white
+    glVertex2f(1.0,-1.0);
+    glVertex2f(-1.0,-1.0);
+    glEnd()
+
+    glMatrixMode(GL_PROJECTION)
+    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity()
     glTranslatef(0.0, self.y - textHeight, 0.0)
     text.draw()
-    glPopMatrix()
-
 
 def usage():
   print "Usage: poseur [ option(s) ]"
   print "Options:"
   print "  -h  --help        Show help"
+  print "  -d  --deubg       Print extra debugging information to console"
   print "  -f  --fullscreen  View slideshow in fullscreen"
   print "  -v  --verbose     Print extra information to console"
   print "  -V  --version     Print version and exit"
@@ -155,8 +203,8 @@ def parse_opts(argv):
   try:
     opts, args = getopt.getopt(
       argv[1:],
-      "hfvVW:H:",
-      ["help", "fullscreen", "verbose", "version", "height=", "width="])
+      "hfvVW:H:d",
+      ["help", "fullscreen", "verbose", "version", "height=", "width=", "debug"])
 
     for o, a in opts:
       if o in ("-h", "--help"):
@@ -164,6 +212,8 @@ def parse_opts(argv):
         sys.exit(0)
       elif o in ("-f", "--fullscreen"):
         options['fullscreen'] = True
+      elif o in ("-d", "--debug"):
+        options['debug'] = True
       elif o in ("-v", "--verbose"):
         options['verbose'] = True
       elif o in ("-W", "--width"):
