@@ -142,7 +142,6 @@ class Slideshow(pyglet.window.Window):
     self.set_exclusive_mouse(True)
 
   def showMouse(self):
-    debug("Showing mouse")
     self.set_exclusive_mouse(False)
 
   def update(self, dt):
@@ -187,7 +186,9 @@ class Slideshow(pyglet.window.Window):
     debug("Mouse button released: x=%d y=%d button=%s modifiers=%s" % (
       x, y, button, modifiers))
 
-    self.on_next_slide_step()
+    # advance on left button press
+    if button & 0x1: # is it really bitmasked?
+      self.on_next_slide_step()
 
   def on_key_release(self, symbol, modifiers):
     debug("Key released: %s (%d)" % (
