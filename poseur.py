@@ -131,6 +131,7 @@ class Slideshow(pyglet.window.Window):
     self.elapsedHideMouse = 0.0
 
   def setVisible(self, foo):
+    debug("Set visible")
     self.set_visible()
 
     if option.FULLSCREEN:
@@ -164,16 +165,18 @@ class Slideshow(pyglet.window.Window):
     if (self.curslide + 1) == len(slides):
       self.on_slideshow_end()
     else:
+      debug("Go forward")
       self.curslide += 1
 
   def on_prev_slide_step(self):
     "Go backwards one step in slideshow"
     if self.curslide > 0:
+      debug("Go backwards")
       self.curslide -= 1
 
   def on_slideshow_end(self):
     "Called when reached end of slide show"
-    pass
+    debug("Slide show ended")
 
   def on_mouse_motion(self, x, y, dx, dy):
     # show mouse again
@@ -205,7 +208,7 @@ class Slideshow(pyglet.window.Window):
   def on_draw(self):
     "Draw current slide"
     fontSize = self.size / 32.0
-    paddingPx = 10
+    paddingPx = fontSize / 2.0
 
     text = pyglet.text.Label(slides[self.curslide],
       font_name='Helvetica',
