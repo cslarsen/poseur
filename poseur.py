@@ -31,9 +31,9 @@ USER_KEY_FORWARD = 717259538432
 # The slideshow to present
 slides = [
   'What is Poseur?',
-  'What is Poseur?\n\n- A simple presentation viewer',
-  'What is Poseur?\n\n- A simple presentation viewer\n- Written in Python',
-  'What is Poseur?\n\n- A simple presentation viewer\n- Written in Python\n- Free and open source',
+  'What is Poseur?<br/><br/>- A <i>simple</i> presentation viewer',
+  'What is Poseur?<br/><br/>- A <i>simple</i> presentation viewer<br/>- Written in <b>Python</b>',
+  'What is Poseur?<br/><br/>- A <i>simple</i> presentation viewer<br/>- Written in <b>Python</b><br/>- Free and open source',
 ]
 
 try:
@@ -229,13 +229,15 @@ class Slideshow(pyglet.window.Window):
     fontSize = self.size / 32.0
     paddingPx = fontSize / 2.0
 
-    text = pyglet.text.Label(
+    #text = pyglet.text.Label(
+    text = pyglet.text.HTMLLabel(
       slides[self.curslide],
-      font_name='Helvetica',
-      font_size=fontSize,
-      color=(0, 0, 0, 255),
       width=self.x - paddingPx,
       multiline=True)
+
+    text.font_name = 'Helvetica'
+    text.font_size = fontSize
+    text.color = (0, 0, 0, 255)
 
     textHeight = fontSize
 
