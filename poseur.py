@@ -229,12 +229,16 @@ class Slideshow(pyglet.window.Window):
     fontSize = self.size / 32.0
     paddingPx = fontSize / 2.0
 
-    #text = pyglet.text.Label(
-    text = pyglet.text.HTMLLabel(
-      slides[self.curslide],
-      width=self.x - paddingPx,
-      multiline=True)
+    useHTML = True
 
+    if useHTML:
+      text = pyglet.text.HTMLLabel()
+    else
+      text = pyglet.text.Label()
+
+    text.text = slides[self.curslide]
+    text.width = self.x - paddingPx
+    text.multiline = True
     text.font_name = 'Helvetica'
     text.font_size = fontSize
     text.color = (0, 0, 0, 255)
