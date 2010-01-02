@@ -121,8 +121,7 @@ class Slideshow(pyglet.window.Window):
 
     # allow time to init window before displaying,
     # to avoid annoying white-out before going black
-
-    self.set_visible()
+    pyglet.clock.schedule_once(self.setVisible, 0.01)
 
     # at startup, insert the END OF SLIDESHOW slide
     slides.append(endSlide)
@@ -131,6 +130,9 @@ class Slideshow(pyglet.window.Window):
     self.elapsed = 0.0
     self.elapsedHideMouse = 0.0
 
+  def setVisible(self, foo):
+    self.set_visible()
+
   def update(self, dt):
     "Called once for each frame, advances animation, etc."
     self.elapsed += dt
@@ -138,9 +140,7 @@ class Slideshow(pyglet.window.Window):
 
     if self.elapsed >= 3.0:
       self.elapsed -= 3.0
-      # print frames per second
-      if option.VERBOSE:
-        verbose("FPS is %f" % pyglet.clock.get_fps())
+      verbose("FPS is %f" % pyglet.clock.get_fps())
 
     # hide mouse after a while
     if self.elapsedHideMouse >= 3.0:
@@ -150,7 +150,7 @@ class Slideshow(pyglet.window.Window):
 
   def on_next_slide_step(self):
     "Go forward one step in slideshow"
-    if self.curslide+1 == len(slides):
+    if (self.curslide + 1) == len(slides):
       self.on_slideshow_end()
     else:
       self.curslide += 1
