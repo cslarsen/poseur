@@ -12,9 +12,13 @@ http://github.com/cslarsen/poseur
 # the red book online: http://fly.cc.fer.hr/~unreal/theredbook/
 
 import sys
-import getopt
 import math
+import optparse
 
+# Program options
+option = {}
+
+# Program strings
 version   = '0.0.1'
 copyright = 'Copyright (C) 2010 Christian Stigen Larsen'
 license   = 'Distributed under the (modified) BSD license'
@@ -24,6 +28,7 @@ license   = 'Distributed under the (modified) BSD license'
 USER_KEY_BACK    = 712964571136
 USER_KEY_FORWARD = 717259538432
 
+# The slideshow to present
 slides = [
   'What is Poseur?',
   '- A simple presentation software',
@@ -31,15 +36,8 @@ slides = [
   '- Free and open source',
 ]
 
-endSlide = '' # "(End of slideshow)"
-
-options = {
-  'fullscreen': False,
-  'verbose':    False,
-  'debug':      False,
-  'width':       1024,
-  'height':       768,
-}
+# Slide shown at end of slideshow
+endSlide = ''
 
 try:
   import pyglet
@@ -48,13 +46,52 @@ except ImportError, e:
   print e
   sys.exit(1)
 
+def parseOptions(argv):
+  "Set program options and return files to process."
+  p = optparse.OptionParser()
+
+  p.add_option("-f", "--fullscreen", dest="FULLSCREEN",
+               action="store_true", default=False,
+               help="View presentation in fullscreen")
+
+  p.add_option("-d", "--debug", dest="DEBUG",
+               action="store_true", default=False,
+               help="Print debugging information to console")
+
+  p.add_option("-v", "--verbose", dest="VERBOSE",
+               action="store_true", default=False,
+               help="Print extra information to console")
+
+  p.add_option("-V", "--version", dest="VERSION",
+               action="store_true", default=False,
+               help="Print program version and exit")
+
+  p.add_option("-W", "--width", dest="WIDTH",
+               type="int", default=640,
+               help="Set window width (default: %default)")
+
+  p.add_option("-H", "--height", dest="HEIGHT",
+               type="int", default=480,
+               help="Set window height (default: %default)")
+
+  global option
+  (option, files) = p.parse_args()
+
+  if option.DEBUG:
+    print "Options:", option
+    print "Arguments:", files
+
+  return files
+
 def verbose(s):
   "Print message if verbose option is set"
-  if options['verbose']: print s
+  if option.VERBOSE:
+    print s
 
 def debug(s):
   "Print message if debug option is set"
-  if options['debug']: print s
+  if option.DEBUG:
+    print s
 
 class Slideshow(pyglet.window.Window):
   "Controls the main window and its message loop."
@@ -104,13 +141,13 @@ class Slideshow(pyglet.window.Window):
     if self.elapsed >= 3.0:
       self.elapsed -= 3.0
       # print frames per second
-      if options['verbose']:
+      if option.VERBOSE:
         verbose("FPS is %f" % pyglet.clock.get_fps())
 
     # hide mouse after a while
     if self.elapsedHideMouse >= 3.0:
       self.elapsedHideMouse -= 3.0
-      if options['fullscreen']:
+      if option.FULLSCREEN:
         self.set_exclusive_mouse(True)
 
   def on_next_slide_step(self):
@@ -190,55 +227,13 @@ class Slideshow(pyglet.window.Window):
     glTranslatef(paddingPx, self.y - fontSize - paddingPx, 0.0)
     text.draw()
 
-def usage():
-  print "Usage: poseur [ option(s) ]"
-  print "Options:"
-  print "  -h  --help        Show help"
-  print "  -d  --deubg       Print extra debugging information to console"
-  print "  -f  --fullscreen  View slideshow in fullscreen"
-  print "  -v  --verbose     Print extra information to console"
-  print "  -V  --version     Print version and exit"
-  print "  -H  --height      Set screen height"
-  print "  -W  --width       Set screen width"
-
-def parse_opts(argv):
-  try:
-    opts, args = getopt.getopt(
-      argv[1:],
-      "hfvVW:H:d",
-      ["help", "fullscreen", "verbose", "version", "height=", "width=", "debug"])
-
-    for o, a in opts:
-      if o in ("-h", "--help"):
-        usage()
-        sys.exit(0)
-      elif o in ("-f", "--fullscreen"):
-        options['fullscreen'] = True
-      elif o in ("-d", "--debug"):
-        options['debug'] = True
-      elif o in ("-v", "--verbose"):
-        options['verbose'] = True
-      elif o in ("-W", "--width"):
-        options['width'] = int(a)
-      elif o in ("-H", "--height"):
-        options['height'] = int(a)
-      elif o in ("-V", "--version"):
-        print version
-        print copyright
-        print license
-        sys.exit(0)
-
-  except getopt.GetoptError, e:
-    print "Error:", e
-    print ""
-    usage()
-    sys.exit(2)
-
-# don't run anything if we're invoked as "import poseur":
 if __name__ == "__main__":
-  parse_opts(sys.argv)
+
+  files = parseOptions(sys.argv)
+
   window = Slideshow(
-    fullscreen = options['fullscreen'],
-    width      = options['width'],
-    height     = options['height'])
+    fullscreen = option.FULLSCREEN,
+    width      = option.WIDTH,
+    height     = option.HEIGHT)
+
   pyglet.app.run()
