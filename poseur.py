@@ -19,8 +19,9 @@ version   = '0.0.1'
 copyright = 'Copyright (C) 2010 Christian Stigen Larsen'
 license   = 'Distributed under the (modified) BSD license'
 
-# browser keys on my particular computer, it this (semi) portable?
-USER_KEY_BACK = 712964571136
+# Browser keys on my particular computer
+# Is this portable across Windows installations?
+USER_KEY_BACK    = 712964571136
 USER_KEY_FORWARD = 717259538432
 
 slides = [
