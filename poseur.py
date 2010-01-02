@@ -76,6 +76,7 @@ class Slideshow(pyglet.window.Window):
     self.size = max(*self.get_size())
     self.x = self.get_size()[0]
     self.y = self.get_size()[1]
+    debug("Screen dimensions are %dx%d pixels" % (self.x, self.y))
 
     self.curslide = 0
 
@@ -160,11 +161,11 @@ class Slideshow(pyglet.window.Window):
  
     glBegin(GL_QUADS)
     glColor3f(1.0,1.0,1.0) # white
-    glVertex2f(-self.x, -self.y)
-    glVertex2f(self.x, -self.y);
+    glVertex2f(-self.x, -self.y + (self.y/2))
+    glVertex2f(self.x, -self.y + (self.y/2));
     glColor3f(0.6,0.6,0.6) # gray
-    glVertex2f(self.x,self.y);
-    glVertex2f(-self.x, self.y);
+    glVertex2f(self.x, self.y - (self.y/2));
+    glVertex2f(-self.x, self.y - (self.y/2));
     glEnd()
  
     glPopMatrix()
