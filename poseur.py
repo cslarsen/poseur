@@ -9,6 +9,8 @@ Distributed under the (modified) BSD license.
 http://github.com/cslarsen/poseur
 """
 
+# the red book online: http://fly.cc.fer.hr/~unreal/theredbook/
+
 import sys
 import getopt
 import math
@@ -140,52 +142,35 @@ class Slideshow(pyglet.window.Window):
   def on_draw(self):
     "Draw current slide"
     fontSize = self.size / 32.0
+    paddingPx = 10
 
     text = pyglet.text.Label(slides[self.curslide],
       font_name='Helvetica',
       font_size=fontSize,
-      color=(155,45,255,255))
+      color=(0, 0, 0, 255))
 
     textHeight = fontSize
 
     self.clear()
-    #glPushMatrix()
 
-    #glMatrixMode(GL_PROJECTION);
-    #glLoadIdentity();
-
-    #glMatrixMode(GL_MODELVIEW);
-    #glLoadIdentity();
-
-    #glBegin(GL_QUADS);
-    #/red color
-    #glColor3f(1.0,0.0,0.0);
-    #glVertex2f(-1.0, 1.0);
-    #glVertex2f(-1.0,-1.0);
-    #/blue color
-    #glColor3f(0.0,0.0,1.0);
-    #glVertex2f(1.0,-1.0);
-    #glVertex2f(1.0, 1.0);
-    #glEnd();
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix()
+ 
     glLoadIdentity()
+    glTranslatef(self.x/2, self.y/2, 0.0)
+ 
     glBegin(GL_QUADS)
-    glColor3f(0.6,0.6,0.6) # gray
-    glVertex2f(-1.0, 1.0);
-    glVertex2f(1.0, 1.0);
     glColor3f(1.0,1.0,1.0) # white
-    glVertex2f(1.0,-1.0);
-    glVertex2f(-1.0,-1.0);
+    glVertex2f(-self.x, -self.y)
+    glVertex2f(self.x, -self.y);
+    glColor3f(0.6,0.6,0.6) # gray
+    glVertex2f(self.x,self.y);
+    glVertex2f(-self.x, self.y);
     glEnd()
-
-    glMatrixMode(GL_PROJECTION)
-    glMatrixMode(GL_MODELVIEW);
+ 
+    glPopMatrix()
+ 
     glLoadIdentity()
-    glTranslatef(0.0, self.y - textHeight, 0.0)
+    glTranslatef(paddingPx, self.y - fontSize - paddingPx, 0.0)
     text.draw()
 
 def usage():
