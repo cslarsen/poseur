@@ -233,7 +233,7 @@ class Slideshow(pyglet.window.Window):
 
     if useHTML:
       text = pyglet.text.HTMLLabel()
-    else
+    else:
       text = pyglet.text.Label()
 
     text.text = slides[self.curslide]
