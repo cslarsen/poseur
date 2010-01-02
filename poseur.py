@@ -145,6 +145,15 @@ class Slideshow(pyglet.window.Window):
     self.elapsed = 0.0
     self.elapsedHideMouse = 0.0
 
+    self.setupGL()
+
+  def setupGL(self):
+    glEnable(GL_BLEND)
+    glShadeModel(GL_SMOOTH)
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE)
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
+    glDisable(GL_DEPTH_TEST)
+
   def setVisible(self, foo):
     debug("Set visible")
     self.set_visible()
