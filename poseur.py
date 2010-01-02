@@ -133,6 +133,17 @@ class Slideshow(pyglet.window.Window):
   def setVisible(self, foo):
     self.set_visible()
 
+    if option.FULLSCREEN:
+      self.hideMouse()
+
+  def hideMouse(self):
+    debug("Hiding mouse")
+    self.set_exclusive_mouse(True)
+
+  def showMouse(self):
+    debug("Showing mouse")
+    self.set_exclusive_mouse(False)
+
   def update(self, dt):
     "Called once for each frame, advances animation, etc."
     self.elapsed += dt
@@ -146,7 +157,7 @@ class Slideshow(pyglet.window.Window):
     if self.elapsedHideMouse >= 3.0:
       self.elapsedHideMouse -= 3.0
       if option.FULLSCREEN:
-        self.set_exclusive_mouse(True)
+        self.hideMouse()
 
   def on_next_slide_step(self):
     "Go forward one step in slideshow"
@@ -166,7 +177,7 @@ class Slideshow(pyglet.window.Window):
 
   def on_mouse_motion(self, x, y, dx, dy):
     # show mouse again
-    self.set_exclusive_mouse(False)
+    self.showMouse()
     self.elapsedHideMouse = 0.0
 
   def on_mouse_release(self, x, y, button, modifiers):
