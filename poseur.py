@@ -36,9 +36,6 @@ slides = [
   'What is Poseur?\n\n- A simple presentation viewer\n- Written in Python\n- Free and open source',
 ]
 
-# Slide shown at end of slideshow
-endSlide = ''
-
 try:
   import pyglet
   from pyglet.gl import *
@@ -137,9 +134,6 @@ class Slideshow(pyglet.window.Window):
     # allow time to init window before displaying,
     # to avoid annoying white-out before going black
     pyglet.clock.schedule_once(self.setVisible, 0.01)
-
-    # at startup, insert the END OF SLIDESHOW slide
-    slides.append(endSlide)
 
     pyglet.clock.schedule(self.update)
     self.elapsed = 0.0
