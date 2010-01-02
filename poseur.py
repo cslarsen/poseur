@@ -30,7 +30,7 @@ slides = [
   '- Free and open source',
 ]
 
-endSlide = '(End of slideshow)'
+endSlide = '' # "(End of slideshow)"
 
 options = {
   'fullscreen': False,
