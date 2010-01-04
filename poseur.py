@@ -13,13 +13,14 @@ http://github.com/cslarsen/poseur
 
 import sys
 import math
+import re
 import optparse
 
 # Program options
 option = {}
 
 # Program strings
-version   = '0.0.1'
+version   = '0.0.2'
 copyright = 'Copyright (C) 2010 Christian Stigen Larsen'
 license   = 'Distributed under the (modified) BSD license'
 
@@ -315,6 +316,11 @@ class Slideshow(pyglet.window.Window):
       # move down to next line after drawing
       glTranslatef(0, -label.bounds()[1], 0.0)
 
+def parseLine(line):
+  line = re.sub("\*([^\*]+)\*", "<b>\\1</b>", line)
+  line = re.sub("\_([^\_]+)\_", "<i>\\1</i>", line)
+  return line
+
 def readSlides(lines):
   "Parse slideshow."
 
@@ -323,7 +329,7 @@ def readSlides(lines):
 
   for line in lines:
     if len(line.strip()) > 0:
-      slide.append(line)
+      slide.append(parseLine(line))
     else:
       slides += [slide]
       slide = []
