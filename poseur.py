@@ -317,6 +317,9 @@ class Slideshow(pyglet.window.Window):
       glTranslatef(0, -label.bounds()[1], 0.0)
 
 def parseLine(line):
+  if re.match("^ {2,}", line):
+    return "<pre>" + line.strip() + "</pre>"
+
   line = re.sub("\*([^\*]+)\*", "<b>\\1</b>", line)
   line = re.sub("\_([^\_]+)\_", "<i>\\1</i>", line)
   return line
