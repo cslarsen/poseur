@@ -369,20 +369,24 @@ def readSlides(lines):
   return slides
 
 if __name__ == "__main__":
+  try:
+    files = parseOptions(sys.argv)
 
-  files = parseOptions(sys.argv)
+    if files:
+      for file in files:
+        f = open(file, "rt")
+        slides += readSlides(f.readlines())
+        f.close()
+    else:
+      slides = readSlides(sys.stdin.readlines())
 
-  if files:
-    for file in files:
-      f = open(file, "rt")
-      slides += readSlides(f.readlines())
-      f.close()
-  else:
-    slides = readSlides(sys.stdin.readlines())
+    window = Slideshow(
+      fullscreen = option.FULLSCREEN,
+      width      = option.WIDTH,
+      height     = option.HEIGHT)
 
-  window = Slideshow(
-    fullscreen = option.FULLSCREEN,
-    width      = option.WIDTH,
-    height     = option.HEIGHT)
+    pyglet.app.run()
 
-  pyglet.app.run()
+  except KeyboardInterrupt, e:
+    debug('Keyboard interrupt')
+    sys.exit(0)
