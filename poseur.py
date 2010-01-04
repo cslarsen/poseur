@@ -105,6 +105,52 @@ def debug(s):
   if option.DEBUG:
     print s
 
+class Item:
+  "An item on screen"
+  def __init__(self):
+    pass
+
+  def on_enter(self):
+    "Signal start of enter animation"
+    pass
+
+  def on_exit(self):
+    "Signal start of exit animation"
+    pass
+
+  def is_anim_finished(self):
+    "True if enter/exit animation has ended"
+    return True
+
+  def on_draw(self):
+    "Draw the object on screen"
+    pass
+
+  def bounds(self):
+    "Return bounding box dimension (width, height)"
+    return (0, 0)
+
+class TextItem(Item):
+  def __init__(self, text, useHTML, width, fontName = 'Helvetica', fontSize = 12, color = (0, 0, 0, 255)):
+    if useHTML:
+      self.label = pyglet.text.HTMLLabel()
+    else:
+      self.label = pyglet.text.Label()
+
+    self.label.text      = text
+    self.label.width     = width
+    self.label.multiline = True
+    self.label.font_name = fontName
+    self.label.font_size = fontSize
+    self.label.color     = color
+
+  def on_draw(self):
+    self.label.draw()
+
+  def bounds(self):
+    # todo: calc width
+    return (0, self.label.font_size)
+
 class Slideshow(pyglet.window.Window):
   "Controls the main window and its message loop."
 
@@ -145,7 +191,7 @@ class Slideshow(pyglet.window.Window):
     glEnable(GL_BLEND)
     glShadeModel(GL_SMOOTH)
     glBlendFunc(GL_SRC_ALPHA,GL_ONE)
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT,GL_NICEST);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glDisable(GL_DEPTH_TEST)
 
   def setVisible(self, foo):
@@ -226,24 +272,12 @@ class Slideshow(pyglet.window.Window):
 
   def on_draw(self):
     "Draw current slide"
-    fontSize = self.size / 32.0
-    paddingPx = fontSize / 2.0
 
-    useHTML = True
-
-    if useHTML:
-      text = pyglet.text.HTMLLabel()
-    else:
-      text = pyglet.text.Label()
-
-    text.text = slides[self.curslide]
-    text.width = self.x - paddingPx
-    text.multiline = True
-    text.font_name = 'Helvetica'
-    text.font_size = fontSize
-    text.color = (0, 0, 0, 255)
-
-    textHeight = fontSize
+    text = TextItem(
+      text = slides[self.curslide],
+      width=self.x - (self.size / 64.0),
+      useHTML = True,
+      fontSize = self.size / 32.0)
 
     self.clear()
 
@@ -264,8 +298,8 @@ class Slideshow(pyglet.window.Window):
     glPopMatrix()
  
     glLoadIdentity()
-    glTranslatef(paddingPx, self.y - fontSize - paddingPx, 0.0)
-    text.draw()
+    glTranslatef(self.size / 64.0, self.y - text.bounds()[1] - (self.size / 64.0), 0.0)
+    text.on_draw()
 
 if __name__ == "__main__":
 
