@@ -1,4 +1,4 @@
-*What is Poseur?*
+-*What is Poseur?*-
 
 - A /simple/ presentation viewer
 - Written in *Python* using *pyglet*
@@ -6,13 +6,13 @@
 - Supports unicode: זרו ֶ״ֵ
 
 
-*Some features*
+-*Some features*-
 
 - Write presentations in plain text
 - Recognizes Markdown-syntax (not yet complete, though)
 
 
-*Text format example*
+-*Text format example*-
 
 This screen was written like this:
 
@@ -21,7 +21,7 @@ This screen was written like this:
     This screen was written like this:
 
 
-*Text format*
+-*Text format*-
 
 - Use `*this*` to write *bold*
 - Use `_this_` to write _underline_
@@ -29,7 +29,7 @@ This screen was written like this:
 - Use double linefeeds for next slide...
 
 
-*Future features*
+-*Future features*-
 
 - Animation support
 - Dual monitor support

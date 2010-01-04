@@ -318,15 +318,18 @@ class Slideshow(pyglet.window.Window):
 
 def parseLine(line):
   if re.match("^ {2,}", line):
-    return "<PRE>" + line.strip() + "</PRE>"
+    return "<pre>" + line.strip() + "</pre>"
 
   # ORDER DEPENDENCY
   line = re.sub("\/([^\/]+)\/", "<i>\\1</i>", line)
   line = re.sub("\*([^\*]+)\*", "<b>\\1</b>", line)
   line = re.sub("\_([^\_]+)\_", "<u>\\1</u>", line)
 
+  if re.match("^-(.+)-$", line):
+    line = re.sub("^-(.+)-$", "<center>\\1</center>", line)
+
   if re.match("^ *[-\*] ", line):
-    return "<ul><li>" + re.sub("^ *[-\*]", "", line) + "</li></ul>"
+    line = "<ul><li>" + re.sub("^ *[-\*]", "", line) + "</li></ul>"
 
   return line
 
@@ -357,7 +360,7 @@ def readSlides(lines):
         slide = []
         newline = False
       else:
-        slide[-1] += '<br />'
+        slide[-1] += '<br /><br />'
         newline = True
 
   if len(slide) > 0:

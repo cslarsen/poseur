@@ -1,0 +1,6 @@
+- Hide mouse correctly
+  - Does not hide after X secs if mouse hasn't moved
+- Using HTMLDecoder is SLOW!
+  - When animation(s) finished, can predraw to bitmap, for instance
+- Add complete Markdown engine
+- Dual monitor support (time spent, etc)
