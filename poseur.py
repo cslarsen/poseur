@@ -328,8 +328,8 @@ def parseLine(line):
   if re.match("^-(.+)-$", line):
     line = re.sub("^-(.+)-$", "<center>\\1</center>", line)
 
-  if re.match("^ *[-\*] ", line):
-    line = "<ul><li>" + re.sub("^ *[-\*]", "", line) + "</li></ul>"
+  if re.match("^(\t )*[-\*] ", line):
+    line = "<ul><li>" + re.sub("^(\t )*[-\*] ", "", line) + "</li></ul>"
 
   return line
 
@@ -360,7 +360,7 @@ def readSlides(lines):
         slide = []
         newline = False
       else:
-        slide[-1] += '<br /><br />'
+        slide[-1] += '<br />'
         newline = True
 
   if len(slide) > 0:
