@@ -1,10 +1,39 @@
-What is Poseur?
-- A _simple_ presentation viewer
-- Written in *Python*
-- Free and open source
+*What is Poseur?*
 
-Future features
+- A _simple_ presentation viewer
+- Written in *Python* using *pyglet*
+- Free and open source
+- Supports unicode: זרו ֶ״ֵ
+
+
+*Some features*
+
+- Write presentations in plain text
+- Recognizes Markdown-syntax (not yet complete, though)
+
+
+*Text format example*
+
+This screen was written like this:
+
+    *Text format example*
+
+    This screen was written like this:
+
+
+*Text format*
+
+- Use `*this*` to write *bold*
+- Use `_this_` to write _italic_
+- Use double linefeeds for next slide...
+
+
+*Future features*
+
+- Animation support
 - Dual monitor support
+- PNG/JPEG support
+- AVI/movie support
 - SVG/3D support
 - Webcam support (for recording your sessions)
 - ... and a lot more!

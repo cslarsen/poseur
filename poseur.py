@@ -321,18 +321,35 @@ def parseLine(line):
   line = re.sub("\_([^\_]+)\_", "<i>\\1</i>", line)
   return line
 
+def expandUnicode(line):
+  s = ""
+  for c in line:
+    if ord(c) > 127:
+      s += "&#%d;" % ord(c)
+    else:
+      s += c
+  return s
+
 def readSlides(lines):
   "Parse slideshow."
 
   slides = []
   slide = []
 
+  newline = False
+
   for line in lines:
     if len(line.strip()) > 0:
-      slide.append(parseLine(line))
+      slide.append(expandUnicode(parseLine(line)))
+      newline = False
     else:
-      slides += [slide]
-      slide = []
+      if newline:
+        slides += [slide]
+        slide = []
+        newline = False
+      else:
+        slide[-1] += '<br />'
+        newline = True
 
   if len(slide) > 0:
     slides += [slide]
