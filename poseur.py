@@ -29,33 +29,7 @@ USER_KEY_BACK    = 712964571136
 USER_KEY_FORWARD = 717259538432
 
 # The slideshow to present
-slides = [
-  ['What is Poseur?',
-   '- A <i>simple</i> presentation viewer',
-   '- Written in <b>Python</b>',
-   '- Free and open source'],
-
-  ['What can I do with it?',
-   'Write a presentation on the go, <i>very</i> quickly...'],
-
-  ['List comprehension',
-   '<PRE>sum([x**2 for x (1,2,3,4)])</PRE>'],
-
-  ['Future features',
-   '- Markdown syntax',
-   '- REPL?',
-   '- Online streaming, perhaps, so you can stream live stuff that is presented',
-   '- SVG and some 3D support',
-   '- Video playback',
-   '- Dual screen support',
-   '- Webcam support (for recording your presentation)',
-   '- Multiple output formats'],
-
-  ['Why did you make it?',
-   '- For fun',
-   '- Was presenting Python to a group of people',
-   '- Why not present Python by writing a presentation tool in it! (it\'s <b>that</b> easy)'],
-]
+slides = []
 
 try:
   import pyglet
@@ -175,7 +149,6 @@ class Slideshow(pyglet.window.Window):
   "Controls the main window and its message loop."
 
   def __init__(self, fullscreen, width, height, visible=False, vsync=True):
-
     pygOpts = {
       'visible':    visible,
       'caption':    'Poseur',
@@ -342,9 +315,35 @@ class Slideshow(pyglet.window.Window):
       # move down to next line after drawing
       glTranslatef(0, -label.bounds()[1], 0.0)
 
+def readSlides(lines):
+  "Parse slideshow."
+
+  slides = []
+  slide = []
+
+  for line in lines:
+    if len(line.strip()) > 0:
+      slide.append(line)
+    else:
+      slides += [slide]
+      slide = []
+
+  if len(slide) > 0:
+    slides += [slide]
+
+  return slides
+
 if __name__ == "__main__":
 
   files = parseOptions(sys.argv)
+
+  if files:
+    for file in files:
+      f = open(file, "rt")
+      slides += readSlides(f.readlines())
+      f.close()
+  else:
+    slides = readSlides(sys.stdin.readlines())
 
   window = Slideshow(
     fullscreen = option.FULLSCREEN,
