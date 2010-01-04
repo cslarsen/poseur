@@ -76,7 +76,7 @@ def parseOptions(argv):
 
   if option.DEBUG:
     print "Poseur options:", option
-    print "Program argumentseurArguments:", files
+    print "Program arguments:", files
     print ""
     print "Pyglet options:", pyglet.options
     print ""
