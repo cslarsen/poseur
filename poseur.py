@@ -38,6 +38,9 @@ slides = [
   ['What can I do with it?',
    'Write a presentation on the go, <i>very</i> quickly...'],
 
+  ['List comprehension',
+   '<PRE>sum([x**2 for x (1,2,3,4)])</PRE>'],
+
   ['Future features',
    '- Markdown syntax',
    '- REPL?',
@@ -193,6 +196,7 @@ class Slideshow(pyglet.window.Window):
     debug("Screen dimensions: %dx%d pixels" % (self.x, self.y))
 
     self.curslide = 0
+    self.curitem = 0
 
     # allow time to init window before displaying,
     # to avoid annoying white-out before going black
@@ -242,17 +246,27 @@ class Slideshow(pyglet.window.Window):
 
   def on_next_slide_step(self):
     "Go forward one step in slideshow"
-    if (self.curslide + 1) == len(slides):
-      self.on_slideshow_end()
+
+    if (self.curitem + 1) == len(slides[self.curslide]):
+      if (self.curslide + 1) == len(slides):
+        self.on_slideshow_end()
+      else:
+        debug("Go forward slide (curslide=%d, curitem=%d)" % (self.curslide, self.curitem))
+        self.curitem = 0
+        self.curslide += 1
     else:
-      debug("Go forward")
-      self.curslide += 1
+      debug("Go forward item (curslide=%d, curitem=%d)" % (self.curslide, self.curitem))
+      self.curitem += 1
 
   def on_prev_slide_step(self):
     "Go backwards one step in slideshow"
-    if self.curslide > 0:
-      debug("Go backwards")
-      self.curslide -= 1
+    if self.curitem == 0:
+      if self.curslide > 0:
+        debug("Go backwards")
+        self.curslide -= 1
+        self.curitem = len(slides[self.curslide]) - 1
+    else:
+      self.curitem -= 1
 
   def on_slideshow_end(self):
     "Called when reached end of slide show"
@@ -316,7 +330,7 @@ class Slideshow(pyglet.window.Window):
     # initial position
     glTranslatef(self.size / 64.0, self.y - (self.size/32.0) - (self.size / 64.0), 0.0)
 
-    for item in slides[self.curslide]:
+    for item in slides[self.curslide][:(1+self.curitem)]:
       label = TextItem(
         text     = item,
         width    = self.x - (self.size / 64.0),
