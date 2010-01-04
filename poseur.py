@@ -30,10 +30,28 @@ USER_KEY_FORWARD = 717259538432
 
 # The slideshow to present
 slides = [
-  'What is Poseur?',
-  'What is Poseur?<br/><br/>- A <i>simple</i> presentation viewer',
-  'What is Poseur?<br/><br/>- A <i>simple</i> presentation viewer<br/>- Written in <b>Python</b>',
-  'What is Poseur?<br/><br/>- A <i>simple</i> presentation viewer<br/>- Written in <b>Python</b><br/>- Free and open source',
+  ['What is Poseur?',
+   '- A <i>simple</i> presentation viewer',
+   '- Written in <b>Python</b>',
+   '- Free and open source'],
+
+  ['What can I do with it?',
+   'Write a presentation on the go, <i>very</i> quickly...'],
+
+  ['Future features',
+   '- Markdown syntax',
+   '- REPL?',
+   '- Online streaming, perhaps, so you can stream live stuff that is presented',
+   '- SVG and some 3D support',
+   '- Video playback',
+   '- Dual screen support',
+   '- Webcam support (for recording your presentation)',
+   '- Multiple output formats'],
+
+  ['Why did you make it?',
+   '- For fun',
+   '- Was presenting Python to a group of people',
+   '- Why not present Python by writing a presentation tool in it! (it\'s <b>that</b> easy)'],
 ]
 
 try:
@@ -148,8 +166,7 @@ class TextItem(Item):
     self.label.draw()
 
   def bounds(self):
-    # todo: calc width
-    return (0, self.label.font_size)
+    return (self.label.content_width, self.label.content_height)
 
 class Slideshow(pyglet.window.Window):
   "Controls the main window and its message loop."
@@ -273,24 +290,21 @@ class Slideshow(pyglet.window.Window):
   def on_draw(self):
     "Draw current slide"
 
-    text = TextItem(
-      text = slides[self.curslide],
-      width=self.x - (self.size / 64.0),
-      useHTML = True,
-      fontSize = self.size / 32.0)
-
     self.clear()
 
     glPushMatrix()
- 
+   
     glLoadIdentity()
     glTranslatef(self.x/2, self.y/2, 0.0)
  
+    white = (1.0, 1.0, 1.0)
+    gray = (0.6, 0.6, 0.6)
+
     glBegin(GL_QUADS)
-    glColor3f(1.0,1.0,1.0) # white
+    glColor3f(*white)
     glVertex2f(-self.x, -self.y + (self.y/2))
     glVertex2f(self.x, -self.y + (self.y/2));
-    glColor3f(0.6,0.6,0.6) # gray
+    glColor3f(*gray)
     glVertex2f(self.x, self.y - (self.y/2));
     glVertex2f(-self.x, self.y - (self.y/2));
     glEnd()
@@ -298,8 +312,21 @@ class Slideshow(pyglet.window.Window):
     glPopMatrix()
  
     glLoadIdentity()
-    glTranslatef(self.size / 64.0, self.y - text.bounds()[1] - (self.size / 64.0), 0.0)
-    text.on_draw()
+
+    # initial position
+    glTranslatef(self.size / 64.0, self.y - (self.size/32.0) - (self.size / 64.0), 0.0)
+
+    for item in slides[self.curslide]:
+      label = TextItem(
+        text     = item,
+        width    = self.x - (self.size / 64.0),
+        useHTML  = True,
+        fontSize = self.size / 32.0)
+
+      label.on_draw()
+
+      # move down to next line after drawing
+      glTranslatef(0, -label.bounds()[1], 0.0)
 
 if __name__ == "__main__":
 
