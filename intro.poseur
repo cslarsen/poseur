@@ -1,6 +1,6 @@
 *What is Poseur?*
 
-- A _simple_ presentation viewer
+- A /simple/ presentation viewer
 - Written in *Python* using *pyglet*
 - Free and open source
 - Supports unicode: זרו ֶ״ֵ
@@ -24,7 +24,8 @@ This screen was written like this:
 *Text format*
 
 - Use `*this*` to write *bold*
-- Use `_this_` to write _italic_
+- Use `_this_` to write _underline_
+- Use `/this/` to write /italics/
 - Use double linefeeds for next slide...
 
 

@@ -318,10 +318,16 @@ class Slideshow(pyglet.window.Window):
 
 def parseLine(line):
   if re.match("^ {2,}", line):
-    return "<pre>" + line.strip() + "</pre>"
+    return "<PRE>" + line.strip() + "</PRE>"
 
+  # ORDER DEPENDENCY
+  line = re.sub("\/([^\/]+)\/", "<i>\\1</i>", line)
   line = re.sub("\*([^\*]+)\*", "<b>\\1</b>", line)
-  line = re.sub("\_([^\_]+)\_", "<i>\\1</i>", line)
+  line = re.sub("\_([^\_]+)\_", "<u>\\1</u>", line)
+
+  if re.match("^ *[-\*] ", line):
+    return "<ul><li>" + re.sub("^ *[-\*]", "", line) + "</li></ul>"
+
   return line
 
 def expandUnicode(line):
