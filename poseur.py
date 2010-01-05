@@ -16,11 +16,6 @@ import math
 import re
 import optparse
 
-# Program options
-option = {
-  'NORMAL_FONT': '' # needed by initializer
-}
-
 # Program strings
 version   = '0.0.3'
 copyright = 'Copyright (C) 2010 Christian Stigen Larsen'
@@ -141,7 +136,11 @@ class Item:
     return (0, 0)
 
 class TextItem(Item):
-  def __init__(self, text, useHTML, width, fontName = option['NORMAL_FONT'], fontSize = DEFAULT_FONT_SIZE, color = FONT_COLOR):
+  def __init__(self, text, useHTML, width, fontName = None, fontSize = DEFAULT_FONT_SIZE, color = FONT_COLOR):
+
+    if fontName == None:
+      fontName = option.NORMAL_FONT
+
     if useHTML:
       self.label = pyglet.text.HTMLLabel()
     else:
