@@ -182,6 +182,14 @@ class Slideshow(pyglet.window.Window):
 
     self.setupGL()
 
+    # add first text item
+    self.items = []
+    self.items.append(TextItem(
+      text     = slides[self.curslide][self.curitem],
+      width    = self.x - (self.size / 64.0),
+      useHTML  = True,
+      fontSize = self.size / 32.0))
+
   def setupGL(self):
     glEnable(GL_BLEND)
     glShadeModel(GL_SMOOTH)
@@ -228,9 +236,22 @@ class Slideshow(pyglet.window.Window):
         debug("Go forward slide (curslide=%d, curitem=%d)" % (self.curslide, self.curitem))
         self.curitem = 0
         self.curslide += 1
+        self.items = []
+
+        self.items.append(TextItem(
+          text     = slides[self.curslide][self.curitem],
+          width    = self.x - (self.size / 64.0),
+          useHTML  = True,
+          fontSize = self.size / 32.0))
     else:
       debug("Go forward item (curslide=%d, curitem=%d)" % (self.curslide, self.curitem))
+
       self.curitem += 1
+      self.items.append(TextItem(
+        text     = slides[self.curslide][self.curitem],
+        width    = self.x - (self.size / 64.0),
+        useHTML  = True,
+        fontSize = self.size / 32.0))
 
   def on_prev_slide_step(self):
     "Go backwards one step in slideshow"
@@ -239,8 +260,18 @@ class Slideshow(pyglet.window.Window):
         debug("Go backwards")
         self.curslide -= 1
         self.curitem = len(slides[self.curslide]) - 1
+
+        # add all items
+        self.items = []
+        for item in slides[self.curslide]:
+          self.items.append(TextItem(
+            text     = item,
+            width    = self.x - (self.size / 64.0),
+            useHTML  = True,
+            fontSize = self.size / 32.0))
     else:
       self.curitem -= 1
+      self.items = self.items[:-1] # pop last item
 
   def on_slideshow_end(self):
     "Called when reached end of slide show"
@@ -304,17 +335,10 @@ class Slideshow(pyglet.window.Window):
     # initial position
     glTranslatef(self.size / 64.0, self.y - (self.size/32.0) - (self.size / 64.0), 0.0)
 
-    for item in slides[self.curslide][:(1+self.curitem)]:
-      label = TextItem(
-        text     = item,
-        width    = self.x - (self.size / 64.0),
-        useHTML  = True,
-        fontSize = self.size / 32.0)
-
-      label.on_draw()
-
+    for item in self.items:
+      item.on_draw()
       # move down to next line after drawing
-      glTranslatef(0, -label.bounds()[1], 0.0)
+      glTranslatef(0, -item.bounds()[1], 0.0)
 
 def parseLine(line):
   if re.match("^ {2,}", line):
