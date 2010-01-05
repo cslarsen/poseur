@@ -15,6 +15,8 @@ import sys
 import math
 import re
 import optparse
+import pyglet
+from pyglet.gl import *
 
 # Program strings
 version   = '0.0.3'
@@ -32,13 +34,6 @@ DEFAULT_FONT_SIZE = 12
 
 # The slideshow to present
 slides = []
-
-try:
-  import pyglet
-  from pyglet.gl import *
-except ImportError, e:
-  print e
-  sys.exit(1)
 
 def parseOptions(argv):
   "Set program options and return files to process."
