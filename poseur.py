@@ -417,7 +417,8 @@ def readSlides(lines):
         slide = []
         newline = False
       else:
-        slide[-1] += '<br />'
+        if len(slide) > 0:
+          slide[-1] += '<br />'
         newline = True
 
   if len(slide) > 0:
