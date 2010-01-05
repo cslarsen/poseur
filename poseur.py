@@ -37,10 +37,6 @@ def parseOptions(argv):
                action="store_true", default=False,
                help="View presentation in fullscreen")
 
-  p.add_option("-d", "--debug", dest="DEBUG",
-               action="store_true", default=False,
-               help="Print debugging information to console")
-
   p.add_option("-v", "--verbose", dest="VERBOSE",
                action="store_true", default=False,
                help="Print extra information to console")
@@ -68,13 +64,6 @@ def parseOptions(argv):
   global option
   (option, files) = p.parse_args()
 
-  if option.DEBUG:
-    print "Poseur options:", option
-    print "Program arguments:", files
-    print ""
-    print "Pyglet options:", pyglet.options
-    print ""
-
   if option.VERSION:
     print "poseur", version
     print copyright
@@ -92,11 +81,6 @@ def parseOptions(argv):
 def verbose(s):
   "Print message if verbose option is set"
   if option.VERBOSE:
-    print s
-
-def debug(s):
-  "Print message if debug option is set"
-  if option.DEBUG:
     print s
 
 class TextItem:
@@ -149,7 +133,6 @@ class Slideshow(pyglet.window.Window):
 
     self.x, self.y = self.get_size()
     self.size = math.sqrt(self.x ** 2 + self.y ** 2)
-    debug("Screen dimensions: %dx%d pixels" % (self.x, self.y))
 
     self.curslide = 0
     self.curitem = 0
@@ -179,14 +162,12 @@ class Slideshow(pyglet.window.Window):
     glDisable(GL_DEPTH_TEST)
 
   def setVisible(self, foo):
-    debug("Set visible")
     self.set_visible()
 
     if option.FULLSCREEN:
       self.hideMouse()
 
   def hideMouse(self):
-    debug("Hiding mouse")
     self.set_exclusive_mouse(True)
 
   def showMouse(self):
@@ -214,22 +195,17 @@ class Slideshow(pyglet.window.Window):
       if (self.curslide + 1) == len(slides):
         self.on_slideshow_end()
       else:
-        debug("Go forward slide (curslide=%d, curitem=%d)" % (self.curslide, self.curitem))
+        # next slide
         self.curitem = 0
         self.curslide += 1
         self.items = []
-
-        debug("Item text: " + slides[self.curslide][self.curitem])
 
         self.items.append(TextItem(
           text     = slides[self.curslide][self.curitem],
           width    = self.x - (self.size / 64.0),
           fontSize = self.size / 32.0))
     else:
-      debug("Go forward item (curslide=%d, curitem=%d)" % (self.curslide, self.curitem))
-      if len(slides[self.curslide]) < self.curitem+1:
-        debug("Item text: " + slides[self.curslide][self.curitem+1])
-
+      # next item
       self.curitem += 1
       self.items.append(TextItem(
         text     = slides[self.curslide][self.curitem],
@@ -240,7 +216,7 @@ class Slideshow(pyglet.window.Window):
     "Go backwards one step in slideshow"
     if self.curitem == 0:
       if self.curslide > 0:
-        debug("Go backwards")
+        # previous slide
         self.curslide -= 1
         self.curitem = len(slides[self.curslide]) - 1
 
@@ -257,7 +233,7 @@ class Slideshow(pyglet.window.Window):
 
   def on_slideshow_end(self):
     "Called when reached end of slide show"
-    debug("Slide show ended")
+    pass
 
   def on_mouse_motion(self, x, y, dx, dy):
     # show mouse again
@@ -265,24 +241,15 @@ class Slideshow(pyglet.window.Window):
     self.elapsedHideMouse = 0.0
 
   def on_mouse_release(self, x, y, button, modifiers):
-    debug("Mouse button released: x=%d y=%d button=%s modifiers=%s" % (
-      x, y, button, modifiers))
-
-    # advance on left button press
-    if button & 0x1: # is it really bitmasked?
+    if button == 1: # left button?
       self.on_next_slide_step()
 
   def on_key_release(self, symbol, modifiers):
-    debug("Key released: %s (%d)" % (
-      pyglet.window.key.symbol_string(symbol),
-      symbol))
-
     if symbol in (pyglet.window.key.RIGHT,
                   pyglet.window.key.SPACE,
                   pyglet.window.key.ENTER,
                   USER_KEY_FORWARD):
       self.on_next_slide_step()
-
     elif symbol in (pyglet.window.key.LEFT,
                     pyglet.window.key.BACKSPACE,
                     USER_KEY_BACK):
@@ -403,5 +370,4 @@ if __name__ == "__main__":
     pyglet.app.run()
 
   except KeyboardInterrupt, e:
-    debug('Keyboard interrupt')
     sys.exit(0)
