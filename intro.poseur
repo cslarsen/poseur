@@ -26,6 +26,7 @@ This screen was written like this:
 - Use `*this*` to write *bold*
 - Use `_this_` to write _underline_
 - Use `/this/` to write /italics/
+- Use `---` to write ---
 - Use double linefeeds for next slide...
 
 

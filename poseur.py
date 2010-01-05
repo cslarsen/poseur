@@ -255,6 +255,8 @@ class Slideshow(pyglet.window.Window):
         self.curslide += 1
         self.items = []
 
+        debug("Item text: " + slides[self.curslide][self.curitem])
+
         self.items.append(TextItem(
           text     = slides[self.curslide][self.curitem],
           width    = self.x - (self.size / 64.0),
@@ -262,6 +264,7 @@ class Slideshow(pyglet.window.Window):
           fontSize = self.size / 32.0))
     else:
       debug("Go forward item (curslide=%d, curitem=%d)" % (self.curslide, self.curitem))
+      debug("Item text: " + slides[self.curslide][self.curitem+1])
 
       self.curitem += 1
       self.items.append(TextItem(
@@ -372,6 +375,8 @@ def parseLine(line):
   # lines beginning with * or - are bulleted lists
   if re.match("^(\t )*[-\*] ", line):
     line = "<ul><li>" + re.sub("^(\t )*[-\*] ", "", line) + "</li></ul>"
+
+  line = re.sub("\n", "<br />", line)
 
   # --- = &mdash;
   line = re.sub("---", "&mdash;", line)
