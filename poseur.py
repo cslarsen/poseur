@@ -100,7 +100,7 @@ class TextItem:
     if re.match("<pre>", text):
       self.label.font_name = option.FIXED_WIDTH_FONT
 
-  def on_draw(self):
+  def draw(self):
     self.label.draw()
 
   def bounds(self):
@@ -285,12 +285,12 @@ class Slideshow(pyglet.window.Window):
     glTranslatef(self.size / 64.0, self.y - (self.size/32.0) - (self.size / 64.0), 0.0)
 
     for item in self.items[:-1]:
-      item.on_draw()
+      item.draw()
       glTranslatef(0, -item.bounds()[1], 0.0) # move down
 
     # draw last one as well
     if len(self.items) > 0:
-      self.items[-1].on_draw()
+      self.items[-1].draw()
 
 def parseLine(line):
   if re.match("^  ", line):
