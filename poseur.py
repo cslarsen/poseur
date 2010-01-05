@@ -110,32 +110,7 @@ def debug(s):
   if option.DEBUG:
     print s
 
-class Item:
-  "An item on screen"
-  def __init__(self):
-    pass
-
-  def on_enter(self):
-    "Signal start of enter animation"
-    pass
-
-  def on_exit(self):
-    "Signal start of exit animation"
-    pass
-
-  def is_anim_finished(self):
-    "True if enter/exit animation has ended"
-    return True
-
-  def on_draw(self):
-    "Draw the object on screen"
-    pass
-
-  def bounds(self):
-    "Return bounding box dimension (width, height)"
-    return (0, 0)
-
-class TextItem(Item):
+class TextItem:
   def __init__(self, text, useHTML, width, fontName = None, fontSize = DEFAULT_FONT_SIZE, color = FONT_COLOR):
 
     if fontName == None:
