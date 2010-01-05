@@ -270,7 +270,8 @@ class Slideshow(pyglet.window.Window):
           fontSize = self.size / 32.0))
     else:
       debug("Go forward item (curslide=%d, curitem=%d)" % (self.curslide, self.curitem))
-      debug("Item text: " + slides[self.curslide][self.curitem+1])
+      if len(slides[self.curslide]) < self.curitem+1:
+        debug("Item text: " + slides[self.curslide][self.curitem+1])
 
       self.curitem += 1
       self.items.append(TextItem(
