@@ -163,6 +163,12 @@ class TextItem(Item):
   def bounds(self):
     return (self.label.content_width, self.label.content_height)
 
+  def set_color(self, color):
+    self.label.color = color
+
+  def get_color(self, color):
+    return self.label.color
+
 class Slideshow(pyglet.window.Window):
   "Controls the main window and its message loop."
 
@@ -355,13 +361,16 @@ class Slideshow(pyglet.window.Window):
     # initial position
     glTranslatef(self.size / 64.0, self.y - (self.size/32.0) - (self.size / 64.0), 0.0)
 
-    for item in self.items:
+    for item in self.items[:-1]:
       item.on_draw()
       glTranslatef(0, -item.bounds()[1], 0.0) # move down
 
+    # draw last one as well
+    self.items[-1].on_draw()
+
 def parseLine(line):
-  if re.match("^ {2,}", line):
-    return "<pre>" + line.strip() + "</pre>"
+  if re.match("^  ", line):
+    return "<pre>" + line[2:].rstrip() + "</pre>"
 
   # ORDER DEPENDENCY
   line = re.sub("\/([^\/]+)\/", "<i>\\1</i>", line) # /italics/
