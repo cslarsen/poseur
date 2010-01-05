@@ -366,7 +366,8 @@ class Slideshow(pyglet.window.Window):
       glTranslatef(0, -item.bounds()[1], 0.0) # move down
 
     # draw last one as well
-    self.items[-1].on_draw()
+    if len(self.items) > 0:
+      self.items[-1].on_draw()
 
 def parseLine(line):
   if re.match("^  ", line):
