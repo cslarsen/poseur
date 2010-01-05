@@ -18,19 +18,13 @@ import optparse
 import pyglet
 from pyglet.gl import *
 
-# Program strings
 version   = '0.0.3'
 copyright = 'Copyright (C) 2010 Christian Stigen Larsen'
 license   = 'Distributed under the (modified) BSD license'
 
-# Browser keys on my particular computer
-# Is this portable across Windows installations?
+# Browser keys on my particular computer (portable?)
 USER_KEY_BACK    = 712964571136
 USER_KEY_FORWARD = 717259538432
-
-# Some other default options
-FONT_COLOR        = (0, 0, 0, 255)
-DEFAULT_FONT_SIZE = 12
 
 # The slideshow to present
 slides = []
@@ -106,16 +100,12 @@ def debug(s):
     print s
 
 class TextItem:
-  def __init__(self, text, useHTML, width, fontName = None, fontSize = DEFAULT_FONT_SIZE, color = FONT_COLOR):
+  def __init__(self, text, width, fontName = None, fontSize = 12, color = (0,0,0,255)):
 
     if fontName == None:
       fontName = option.NORMAL_FONT
 
-    if useHTML:
-      self.label = pyglet.text.HTMLLabel()
-    else:
-      self.label = pyglet.text.Label()
-
+    self.label = pyglet.text.HTMLLabel()
     self.label.text      = text
     self.label.width     = width
     self.label.multiline = True
@@ -179,7 +169,6 @@ class Slideshow(pyglet.window.Window):
     self.items.append(TextItem(
       text     = slides[self.curslide][self.curitem],
       width    = self.x - (self.size / 64.0),
-      useHTML  = True,
       fontSize = self.size / 32.0))
 
   def setupGL(self):
@@ -235,7 +224,6 @@ class Slideshow(pyglet.window.Window):
         self.items.append(TextItem(
           text     = slides[self.curslide][self.curitem],
           width    = self.x - (self.size / 64.0),
-          useHTML  = True,
           fontSize = self.size / 32.0))
     else:
       debug("Go forward item (curslide=%d, curitem=%d)" % (self.curslide, self.curitem))
@@ -246,7 +234,6 @@ class Slideshow(pyglet.window.Window):
       self.items.append(TextItem(
         text     = slides[self.curslide][self.curitem],
         width    = self.x - (self.size / 64.0),
-        useHTML  = True,
         fontSize = self.size / 32.0))
 
   def on_prev_slide_step(self):
@@ -263,7 +250,6 @@ class Slideshow(pyglet.window.Window):
           self.items.append(TextItem(
             text     = item,
             width    = self.x - (self.size / 64.0),
-            useHTML  = True,
             fontSize = self.size / 32.0))
     else:
       self.curitem -= 1
