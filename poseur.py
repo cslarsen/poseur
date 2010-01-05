@@ -20,7 +20,7 @@ import optparse
 option = {}
 
 # Program strings
-version   = '0.0.2'
+version   = '0.0.3'
 copyright = 'Copyright (C) 2010 Christian Stigen Larsen'
 license   = 'Distributed under the (modified) BSD license'
 
