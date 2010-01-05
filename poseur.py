@@ -345,15 +345,20 @@ def parseLine(line):
     return "<pre>" + line.strip() + "</pre>"
 
   # ORDER DEPENDENCY
-  line = re.sub("\/([^\/]+)\/", "<i>\\1</i>", line)
-  line = re.sub("\*([^\*]+)\*", "<b>\\1</b>", line)
-  line = re.sub("\_([^\_]+)\_", "<u>\\1</u>", line)
+  line = re.sub("\/([^\/]+)\/", "<i>\\1</i>", line) # /italics/
+  line = re.sub("\*([^\*]+)\*", "<b>\\1</b>", line) # *bold*
+  line = re.sub("\_([^\_]+)\_", "<u>\\1</u>", line) # _underline_
 
+  # -foo- == centered line
   if re.match("^-(.+)-$", line):
     line = re.sub("^-(.+)-$", "<center>\\1</center>", line)
 
+  # lines beginning with * or - are bulleted lists
   if re.match("^(\t )*[-\*] ", line):
     line = "<ul><li>" + re.sub("^(\t )*[-\*] ", "", line) + "</li></ul>"
+
+  # --- = &mdash;
+  line = re.sub("---", "&mdash;", line)
 
   return line
 
