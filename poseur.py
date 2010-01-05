@@ -17,7 +17,9 @@ import re
 import optparse
 
 # Program options
-option = {}
+option = {
+  'NORMAL_FONT': '' # needed by initializer
+}
 
 # Program strings
 version   = '0.0.3'
@@ -28,6 +30,10 @@ license   = 'Distributed under the (modified) BSD license'
 # Is this portable across Windows installations?
 USER_KEY_BACK    = 712964571136
 USER_KEY_FORWARD = 717259538432
+
+# Some other default options
+FONT_COLOR        = (0, 0, 0, 255)
+DEFAULT_FONT_SIZE = 12
 
 # The slideshow to present
 slides = []
@@ -66,6 +72,14 @@ def parseOptions(argv):
   p.add_option("-H", "--height", dest="HEIGHT",
                type="int", default=480,
                help="Set window height (default: %default)")
+
+  p.add_option("-F", "--font", dest="NORMAL_FONT",
+               metavar="NAME", default='Helvetica',
+               help="Set font name (default: %default)")
+
+  p.add_option("-C", "--fixed-font", dest="FIXED_WIDTH_FONT",
+               metavar="NAME", default='Courier New',
+               help="Set fixed width font name (default: %default)")
 
   global option
   (option, files) = p.parse_args()
@@ -127,7 +141,7 @@ class Item:
     return (0, 0)
 
 class TextItem(Item):
-  def __init__(self, text, useHTML, width, fontName = 'Helvetica', fontSize = 12, color = (0, 0, 0, 255)):
+  def __init__(self, text, useHTML, width, fontName = option['NORMAL_FONT'], fontSize = DEFAULT_FONT_SIZE, color = FONT_COLOR):
     if useHTML:
       self.label = pyglet.text.HTMLLabel()
     else:
@@ -139,6 +153,9 @@ class TextItem(Item):
     self.label.font_name = fontName
     self.label.font_size = fontSize
     self.label.color     = color
+
+    if re.match("<pre>", text):
+      self.label.font_name = option.FIXED_WIDTH_FONT
 
   def on_draw(self):
     self.label.draw()
@@ -317,7 +334,7 @@ class Slideshow(pyglet.window.Window):
     glTranslatef(self.x/2, self.y/2, 0.0)
  
     white = (1.0, 1.0, 1.0)
-    gray = (0.6, 0.6, 0.6)
+    gray  = (0.6, 0.6, 0.6)
 
     glBegin(GL_QUADS)
     glColor3f(*white)
@@ -337,8 +354,7 @@ class Slideshow(pyglet.window.Window):
 
     for item in self.items:
       item.on_draw()
-      # move down to next line after drawing
-      glTranslatef(0, -item.bounds()[1], 0.0)
+      glTranslatef(0, -item.bounds()[1], 0.0) # move down
 
 def parseLine(line):
   if re.match("^ {2,}", line):
