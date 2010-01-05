@@ -376,8 +376,6 @@ def parseLine(line):
   if re.match("^(\t )*[-\*] ", line):
     line = "<ul><li>" + re.sub("^(\t )*[-\*] ", "", line) + "</li></ul>"
 
-  line = re.sub("\n", "<br />", line)
-
   # --- = &mdash;
   line = re.sub("---", "&mdash;", line)
 
