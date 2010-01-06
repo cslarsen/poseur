@@ -1,4 +1,4 @@
-<center><b>What is Poseur?</b></center>
+<center><b>What is Poseur?</b></center><br/>
 
 <ul><li>A <i>simple</i> presentation viewer</li></ul>
 <ul><li>Written in <b>Python</b> &mdash; using <b>pyglet</b></li></ul>
@@ -6,36 +6,18 @@
 <ul><li>Supports unicode: זרו ֶ״ֵ</li></ul>
 
 
-<center><bold>Some features</bold></center>
+<center><b>Some features</b></center><br/>
 
 <ul><li>Write presentations in plain text</li></ul>
 <ul><li>Recognizes Markdown-syntax (not yet complete, though)</li></ul>
 
 
--*Text format example*-
+<center><b>Future features</b></center><br/>
 
-This screen was written like this:
-
-  *Text format example*
-
-  This screen was written like this:
-
-
--*Text format*-
-
-- Use `*this*` to write *bold*
-- Use `_this_` to write _underline_
-- Use `/this/` to write /italics/
-- Use `---` to write ---
-- Use double linefeeds for next slide...
-
-
--*Future features*-
-
-- Animation support
-- Dual monitor support
-- PNG/JPEG support
-- AVI/movie support
-- SVG/3D support
-- Webcam support (for recording your sessions)
-- ... and a lot more!
+<ul><li>Animation support</li></ul>
+<ul><li>Dual monitor support</li></ul>
+<ul><li>PNG/JPEG support</li></ul>
+<ul><li>AVI/movie support</li></ul>
+<ul><li>SVG/3D support</li></ul>
+<ul><li>Webcam support (for recording your sessions)</li></ul>
+<ul><li>... and a lot more!</li></ul>
