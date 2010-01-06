@@ -105,12 +105,6 @@ def makeText(text, width, font_name=None, font_size=12, color = (0,0,0,255)):
 class Slideshow(pyglet.window.Window):
   "Controls the main window and its message loop."
 
-  def addText(self, text):
-    self.items.append(makeText(
-        text      = text,
-        width     = self.x - (self.size / 64.0),
-        font_size = self.size / 32.0))
-
   def __init__(self, fullscreen, width, height, visible=False, vsync=True):
     pygOpts = {
       'visible':    visible,
@@ -165,6 +159,12 @@ class Slideshow(pyglet.window.Window):
   def showMouse(self):
     self.set_exclusive_mouse(False)
 
+  def addText(self, text):
+    self.items.append(makeText(
+        text      = text,
+        width     = self.x - (self.size / 64.0),
+        font_size = self.size / 32.0))
+
   def update(self, dt):
     "Called once for each frame, advances animation, etc."
     self.elapsed += dt
@@ -193,13 +193,10 @@ class Slideshow(pyglet.window.Window):
   def nextItem(self):
     self.curitem += 1
 
-    if self.curitem < len(slides[self.curslide]):
+    if self.curslide < len(slides) and self.curitem < len(slides[self.curslide]):
       self.addText(slides[self.curslide][self.curitem])
     else:
       self.nextSlide()
-
-  def on_next_slide_step(self):
-    self.nextItem()
 
   def on_prev_slide_step(self):
     "Go backwards one step in slideshow"
@@ -226,11 +223,12 @@ class Slideshow(pyglet.window.Window):
 
   def on_mouse_release(self, x, y, button, modifiers):
     if button == 1: # left button?
-      self.on_next_slide_step()
+      self.nextItem()
 
   def on_key_release(self, symbol, modifiers):
     if symbol in (RIGHT, SPACE, ENTER, USER_KEY_FORWARD):
-      self.on_next_slide_step()
+      self.nextItem()
+
     elif symbol in (LEFT, BACKSPACE, USER_KEY_BACK):
       self.on_prev_slide_step()
 
@@ -239,6 +237,7 @@ class Slideshow(pyglet.window.Window):
 
     self.clear()
 
+    # draw gradient background
     glPushMatrix()
     glLoadIdentity()
     glTranslatef(self.x/2, self.y/2, 0.0)
@@ -252,19 +251,19 @@ class Slideshow(pyglet.window.Window):
     glEnd()
     glPopMatrix()
  
-    # initial position
+    # position first text item
     glLoadIdentity()
     glTranslatef(self.size/64.0, self.y-(self.size/32.0)-(self.size/64.0), 0.0)
 
-    for item in self.items[:-1]:
-      item.draw()
-      glTranslatef(0, -item.content_height, 0.0) # move down
+    for textItem in self.items[:-1]:
+      textItem.draw()
+      glTranslatef(0, -textItem.content_height, 0.0) # move down
 
     # draw last one as well
     if len(self.items) > 0:
       self.items[-1].draw()
 
-def expandUnicode(line):
+def expandChar(line):
   s = ""
   for c in line:
     if ord(c) > 127:
@@ -283,7 +282,7 @@ def readSlides(lines):
 
   for line in lines:
     if len(line.strip()) > 0:
-      slide.append(expandUnicode(line))
+      slide.append(expandChar(line))
       newline = False
     else:
       if newline:
