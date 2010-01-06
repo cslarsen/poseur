@@ -17,6 +17,7 @@ import re
 import optparse
 import pyglet
 from pyglet.gl import *
+from pyglet.window.key import *
 
 version   = '0.0.3'
 copyright = 'Copyright (C) 2010 Christian Stigen Larsen'
@@ -25,6 +26,9 @@ license   = 'Distributed under the (modified) BSD license'
 # Browser keys on my particular computer (portable?)
 USER_KEY_BACK    = 712964571136
 USER_KEY_FORWARD = 717259538432
+
+GRAD_COL_TOP = (0.6, 0.6, 0.6)
+GRAD_COL_BOTTOM = (1.0, 1.0, 1.0)
 
 # The slideshow to present
 slides = []
@@ -71,9 +75,9 @@ def parseOptions(argv):
     print ""
     print "Using pyglet version", pyglet.version
     print ""
-    print "OpenGL version:", pyglet.gl.gl_info.get_version()
-    print "OpenGL vendor:", pyglet.gl.gl_info.get_vendor()
-    print "OpenGL renderer:", pyglet.gl.gl_info.get_renderer()
+    print "OpenGL version:", gl_info.get_version()
+    print "OpenGL vendor:", gl_info.get_vendor()
+    print "OpenGL renderer:", gl_info.get_renderer()
     sys.exit(0)
 
   return files
@@ -83,37 +87,29 @@ def verbose(s):
   if option.VERBOSE:
     print s
 
-class TextItem:
-  def __init__(self, text, width, fontName = None, fontSize = 12, color = (0,0,0,255)):
+def makeText(text, width, font_name=None, font_size=12, color = (0,0,0,255)):
+    r = pyglet.text.HTMLLabel(text=text, width=width, multiline=True)
 
-    if fontName == None:
-      fontName = option.NORMAL_FONT
+    if font_name == None:
+      font_name = option.NORMAL_FONT
 
-    self.label = pyglet.text.HTMLLabel()
-    self.label.text      = text
-    self.label.width     = width
-    self.label.multiline = True
-    self.label.font_name = fontName
-    self.label.font_size = fontSize
-    self.label.color     = color
+    r.font_name = font_name
+    r.font_size = font_size
+    r.color     = color
 
     if re.match("<pre>", text):
-      self.label.font_name = option.FIXED_WIDTH_FONT
+      r.font_name = option.FIXED_WIDTH_FONT
 
-  def draw(self):
-    self.label.draw()
-
-  def bounds(self):
-    return (self.label.content_width, self.label.content_height)
-
-  def set_color(self, color):
-    self.label.color = color
-
-  def get_color(self, color):
-    return self.label.color
+    return r
 
 class Slideshow(pyglet.window.Window):
   "Controls the main window and its message loop."
+
+  def addText(self, text):
+    self.items.append(makeText(
+        text      = text,
+        width     = self.x - (self.size / 64.0),
+        font_size = self.size / 32.0))
 
   def __init__(self, fullscreen, width, height, visible=False, vsync=True):
     pygOpts = {
@@ -149,17 +145,13 @@ class Slideshow(pyglet.window.Window):
 
     # add first text item
     self.items = []
-    self.items.append(TextItem(
-      text     = slides[self.curslide][self.curitem],
-      width    = self.x - (self.size / 64.0),
-      fontSize = self.size / 32.0))
+    self.addText(slides[self.curslide][self.curitem])
 
   def setupGL(self):
     glEnable(GL_BLEND)
     glShadeModel(GL_SMOOTH)
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE)
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    glDisable(GL_DEPTH_TEST)
 
   def setVisible(self, foo):
     self.set_visible()
@@ -188,29 +180,26 @@ class Slideshow(pyglet.window.Window):
       if option.FULLSCREEN:
         self.hideMouse()
 
-  def on_next_slide_step(self):
-    "Go forward one step in slideshow"
+  def nextSlide(self):
+    self.curslide += 1
 
-    if (self.curitem + 1) == len(slides[self.curslide]):
-      if (self.curslide + 1) == len(slides):
-        self.on_slideshow_end()
-      else:
-        # next slide
-        self.curitem = 0
-        self.curslide += 1
-        self.items = []
-
-        self.items.append(TextItem(
-          text     = slides[self.curslide][self.curitem],
-          width    = self.x - (self.size / 64.0),
-          fontSize = self.size / 32.0))
+    if self.curslide < len(slides):
+      self.items   = []
+      self.curitem = -1
+      self.nextItem()
     else:
-      # next item
-      self.curitem += 1
-      self.items.append(TextItem(
-        text     = slides[self.curslide][self.curitem],
-        width    = self.x - (self.size / 64.0),
-        fontSize = self.size / 32.0))
+      self.on_slideshow_end()
+
+  def nextItem(self):
+    self.curitem += 1
+
+    if self.curitem < len(slides[self.curslide]):
+      self.addText(slides[self.curslide][self.curitem])
+    else:
+      self.nextSlide()
+
+  def on_next_slide_step(self):
+    self.nextItem()
 
   def on_prev_slide_step(self):
     "Go backwards one step in slideshow"
@@ -222,11 +211,7 @@ class Slideshow(pyglet.window.Window):
 
         # add all items
         self.items = []
-        for item in slides[self.curslide]:
-          self.items.append(TextItem(
-            text     = item,
-            width    = self.x - (self.size / 64.0),
-            fontSize = self.size / 32.0))
+        [self.addText(x) for x in slides[self.curslide]]
     else:
       self.curitem -= 1
       self.items = self.items[:-1] # pop last item
@@ -236,7 +221,6 @@ class Slideshow(pyglet.window.Window):
     pass
 
   def on_mouse_motion(self, x, y, dx, dy):
-    # show mouse again
     self.showMouse()
     self.elapsedHideMouse = 0.0
 
@@ -245,14 +229,9 @@ class Slideshow(pyglet.window.Window):
       self.on_next_slide_step()
 
   def on_key_release(self, symbol, modifiers):
-    if symbol in (pyglet.window.key.RIGHT,
-                  pyglet.window.key.SPACE,
-                  pyglet.window.key.ENTER,
-                  USER_KEY_FORWARD):
+    if symbol in (RIGHT, SPACE, ENTER, USER_KEY_FORWARD):
       self.on_next_slide_step()
-    elif symbol in (pyglet.window.key.LEFT,
-                    pyglet.window.key.BACKSPACE,
-                    USER_KEY_BACK):
+    elif symbol in (LEFT, BACKSPACE, USER_KEY_BACK):
       self.on_prev_slide_step()
 
   def on_draw(self):
@@ -261,58 +240,29 @@ class Slideshow(pyglet.window.Window):
     self.clear()
 
     glPushMatrix()
-   
     glLoadIdentity()
     glTranslatef(self.x/2, self.y/2, 0.0)
- 
-    white = (1.0, 1.0, 1.0)
-    gray  = (0.6, 0.6, 0.6)
-
     glBegin(GL_QUADS)
-    glColor3f(*white)
+    glColor3f(*GRAD_COL_BOTTOM)
     glVertex2f(-self.x, -self.y + (self.y/2))
     glVertex2f(self.x, -self.y + (self.y/2));
-    glColor3f(*gray)
+    glColor3f(*GRAD_COL_TOP)
     glVertex2f(self.x, self.y - (self.y/2));
     glVertex2f(-self.x, self.y - (self.y/2));
     glEnd()
- 
     glPopMatrix()
  
-    glLoadIdentity()
-
     # initial position
-    glTranslatef(self.size / 64.0, self.y - (self.size/32.0) - (self.size / 64.0), 0.0)
+    glLoadIdentity()
+    glTranslatef(self.size/64.0, self.y-(self.size/32.0)-(self.size/64.0), 0.0)
 
     for item in self.items[:-1]:
       item.draw()
-      glTranslatef(0, -item.bounds()[1], 0.0) # move down
+      glTranslatef(0, -item.content_height, 0.0) # move down
 
     # draw last one as well
     if len(self.items) > 0:
       self.items[-1].draw()
-
-def parseLine(line):
-  if re.match("^  ", line):
-    return "<pre>" + line[2:].rstrip() + "</pre>"
-
-  # ORDER DEPENDENCY
-  line = re.sub("\/([^\/]+)\/", "<i>\\1</i>", line) # /italics/
-  line = re.sub("\*([^\*]+)\*", "<b>\\1</b>", line) # *bold*
-  line = re.sub("\_([^\_]+)\_", "<u>\\1</u>", line) # _underline_
-
-  # -foo- == centered line
-  if re.match("^-(.+)-$", line):
-    line = re.sub("^-(.+)-$", "<center>\\1</center>", line)
-
-  # lines beginning with * or - are bulleted lists
-  if re.match("^(\t )*[-\*] ", line):
-    line = "<ul><li>" + re.sub("^(\t )*[-\*] ", "", line) + "</li></ul>"
-
-  # --- = &mdash;
-  line = re.sub("---", "&mdash;", line)
-
-  return line
 
 def expandUnicode(line):
   s = ""
@@ -333,7 +283,7 @@ def readSlides(lines):
 
   for line in lines:
     if len(line.strip()) > 0:
-      slide.append(expandUnicode(parseLine(line)))
+      slide.append(expandUnicode(line))
       newline = False
     else:
       if newline:

@@ -1,15 +1,15 @@
--*What is Poseur?*-
+<center><b>What is Poseur?</b></center>
 
-- A /simple/ presentation viewer
-- Written in *Python* --- using *pyglet*
-- Free and open source
-- Supports unicode: זרו ֶ״ֵ
+<ul><li>A <i>simple</i> presentation viewer</li></ul>
+<ul><li>Written in <b>Python</b> &mdash; using <b>pyglet</b></li></ul>
+<ul><li>Free and open source</li></ul>
+<ul><li>Supports unicode: זרו ֶ״ֵ</li></ul>
 
 
--*Some features*-
+<center><bold>Some features</bold></center>
 
-- Write presentations in plain text
-- Recognizes Markdown-syntax (not yet complete, though)
+<ul><li>Write presentations in plain text</li></ul>
+<ul><li>Recognizes Markdown-syntax (not yet complete, though)</li></ul>
 
 
 -*Text format example*-
